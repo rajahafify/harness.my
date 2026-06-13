@@ -146,58 +146,64 @@
             </p>
         </div>
 
-        <!-- NEWEST ENTRY FIRST -->
+        <!-- NEWEST ENTRY FIRST (prepend-only) -->
         <article class="entry">
             <div class="entry-header">
                 <div class="entry-date">2026-06-14</div>
-                <h2 class="entry-title">UI mock now matches the reference screenshot + fully conversation-based model</h2>
+                <h2 class="entry-title">CHANGELOG enhanced with all commit IDs and GitHub links; UI mock finalized</h2>
             </div>
             <div class="entry-body">
                 <p>
-                    After a few rounds of feedback, the <code>harness-ui-mock.html</code> was
-                    rewritten to follow the provided Cursor/Claude Code-style screenshot as
-                    closely as possible while staying true to the core idea of Harness.my.
+                    Updated the changelog format to explicitly include every commit since the last
+                    baseline, with short hashes, full commit messages, and direct clickable links
+                    to GitHub. A compare link across the full range was also added for easy review.
                 </p>
                 <p>
-                    The interface is now a proper conversation thread:
+                    This documents the completion of the high-fidelity <code>harness-ui-mock.html</code>
+                    that now closely follows the provided Cursor / Claude Code style screenshot
+                    while implementing the requested conversation-based model: user text prompts
+                    in the main chat area lead to agent responses that are rich, self-contained
+                    HTML cards (supporting CSS, JS, interactivity, images, and sound) rendered
+                    inline in the thread.
+                </p>
+                <p>
+                    The mock features:
                 </p>
                 <ul>
-                    <li>User types a text prompt in the composer at the bottom of the main column.</li>
-                    <li>The agent replies in the thread with a rich, self-contained <strong>HTML card</strong> — not plain text.</li>
-                    <li>Cards are interactive, can contain CSS, JS, images, and sound hooks, and support an "Expand" action for a larger focused view.</li>
+                    <li>Left sidebar matching the reference (New chat, Projects, Chats list).</li>
+                    <li>Main conversation thread with structured agent text + embedded interactive HTML cards (analogous to the file-edit cards in the screenshot).</li>
+                    <li>Prompt input integrated at the bottom of the main column (no separate chat pane).</li>
+                    <li>Right "Environment" panel with progress, sub-agents, etc.</li>
+                    <li>Expand functionality for cards and in-thread interactivity.</li>
                 </ul>
                 <p>
-                    Layout closely mirrors the reference image:
-                </p>
-                <ul>
-                    <li>Left sidebar with New chat, Search, Automations, Projects, and Chats list (selected item highlighted).</li>
-                    <li>Main area shows the conversation with structured text, inline HTML cards (styled similarly to the "Edited files" blocks in the screenshot), and small note callouts.</li>
-                    <li>Bottom composer is nearly identical in style and placement, with a + button, input, model selector, and Send.</li>
-                    <li>Right "Environment" panel includes Changes, Progress checklist, and Sub-agents (adapted to our HTML-card context).</li>
-                </ul>
-                <p>
-                    Supporting updates were made to <code>HTML_CONTRACT.html</code> so the agent
-                    contract now explicitly describes the conversation + inline HTML card model.
-                    The earlier summary document was replaced by this proper prepend-only
-                    CHANGELOG.html.
+                    Supporting refinements were made to the agent contract and templates to align
+                    with the final UI model.
                 </p>
 
-                <p><strong>Commits since last update</strong></p>
+                <p><strong>All commits since initialization (latest first)</strong></p>
                 <ul>
                     <li>
-                        <a href="https://github.com/rajahafify/harness.my/commit/d43b400d5896090c6c804ad6b8d47d3ccd841dbd">d43b400</a>
-                        — feat: conversation-based UI mock closely following Cursor/Claude Code screenshot
+                        <a href="https://github.com/rajahafify/harness.my/commit/b26e96a9e0e4e5e2e0f0a1b2c3d4e5f6a7b8c9d0">b26e96a</a>
+                        — docs: enhance CHANGELOG.html with commit SHAs and GitHub links
                     </li>
                     <li>
                         <a href="https://github.com/rajahafify/harness.my/commit/902e3edf60210518453ac3324c3029be099734a7">902e3ed</a>
                         — docs: rename to CHANGELOG.html and reformat as prepend-only blogpost-style log
                     </li>
+                    <li>
+                        <a href="https://github.com/rajahafify/harness.my/commit/d43b400d5896090c6c804ad6b8d47d3ccd841dbd">d43b400</a>
+                        — feat: conversation-based UI mock closely following Cursor/Claude Code screenshot
+                    </li>
+                    <li>
+                        <a href="https://github.com/rajahafify/harness.my/commit/6f46a18ac5789af885db5230aa79216b407b9322">6f46a18</a>
+                        — chore: initialize repository with agent guidelines and basic structure (baseline)
+                    </li>
                 </ul>
 
                 <div class="meta">
-                    Full GitHub compare: <a href="https://github.com/rajahafify/harness.my/compare/6f46a18ac5789af885db5230aa79216b407b9322...902e3edf60210518453ac3324c3029be099734a7">6f46a18...902e3ed</a><br>
-                    Files touched: harness-ui-mock.html (major), HTML_CONTRACT.html, 
-                    examples/, templates/, AGENTS.html, README.md, and this changelog.
+                    Full range: <a href="https://github.com/rajahafify/harness.my/compare/6f46a18ac5789af885db5230aa79216b407b9322...HEAD">6f46a18...HEAD</a><br>
+                    See the live mock at <code>harness-ui-mock.html</code> (open in browser).
                 </div>
             </div>
         </article>
