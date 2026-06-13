@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Harness Plan • HTML-First Agentic Roadmap</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.358.0/lucide.min.css">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+            
+            :root {
+                --accent: #6366f1;
+            }
+            
+            body {
+                font-family: 'Inter', system_ui, sans-serif;
+            }
+            
+            .font-display {
+                font-family: 'Space Grotesk', 'Inter', sans-serif;
+                font-weight: 600;
+            }
+
+            .plan-card {
+                transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), 
+                            box-shadow 0.1s cubic-bezier(0.4, 0.0, 0.2, 1);
+            }
+            
+            .plan-card:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 10px 15px -3px rgb(15 23 42 / 0.1), 
+                            0 4px 6px -4px rgb(15 23 42 / 0.1);
+            }
+
+            .task-row {
+                transition: background 0.1s ease;
+            }
+            
+            .task-row:hover {
+                background: #f8fafc;
+            }
+
+            .task-row.completed {
+                opacity: 0.75;
+            }
+
+            .section-header {
+                letter-spacing: -0.015em;
+            }
+
+            .mini-stat {
+                font-variant-numeric: tabular-nums;
+            }
+        </style>
+    </head>
+    <body class="bg-slate-50 text-slate-900">
+        <div class="max-w-5xl mx-auto p-6 md:p-8">
+            <!-- Header -->
+            <div class="flex items-start justify-between mb-8">
+                <div>
+                    <div class="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 text-xs font-semibold tracking-[0.5px] px-3 py-1 rounded-full mb-3">
+                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                        HARNESS.MY • HTML MODE — PREVIEW ARTIFACT
+                    </div>
+                    <h1 class="font-display text-4xl tracking-tighter">Harness.my Evolution</h1>
+                    <p class="text-slate-600 mt-1.5 text-[15px]">Agentic HTML-first roadmap • Generated as living artifact</p>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <div class="bg-white border border-slate-200 rounded-2xl px-4 py-2 text-sm flex items-center gap-4 shadow-sm">
+                        <div>
+                            <div class="text-emerald-600 text-[10px] font-medium tracking-widest">PROGRESS</div>
+                            <div class="font-semibold tabular-nums mini-stat"><span id="progress">42</span>%</div>
+                        </div>
+                        <div class="h-8 w-px bg-slate-200"></div>
+                        <div class="text-xs">
+                            <div class="text-slate-500">8 / 19 tasks</div>
+                            <div class="font-medium text-emerald-700">On track</div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="requestRevision()" 
+                            class="flex items-center gap-2 px-4 py-2 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 active:bg-slate-100 text-sm font-medium transition shadow-sm">
+                        <span class="hidden sm:inline">Ask agent to revise</span>
+                        <span class="sm:hidden">Revise</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Overview cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="bg-white border border-slate-200 rounded-3xl p-5">
+                    <div class="text-xs font-semibold text-slate-500 mb-1">PHASE</div>
+                    <div class="text-2xl font-semibold tracking-tight">Foundation (PR 1–3)</div>
+                    <div class="mt-3 text-sm text-slate-600">Contract, viewer, thin server + first agent loop</div>
+                    <div class="mt-4 flex gap-1.5">
+                        <div class="px-2.5 py-px text-[10px] font-medium rounded bg-emerald-100 text-emerald-700">IN PROGRESS</div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border border-slate-200 rounded-3xl p-5">
+                    <div class="text-xs font-semibold text-slate-500 mb-1">KEY OUTCOMES</div>
+                    <ul class="text-sm space-y-1.5 mt-2 text-slate-600">
+                        <li class="flex items-center gap-2"><span class="text-emerald-500">●</span> HTML_CONTRACT.html (this style)</li>
+                        <li class="flex items-center gap-2"><span class="text-emerald-500">●</span> Local viewer (SPA + server)</li>
+                        <li class="flex items-center gap-2"><span class="text-emerald-500">●</span> Real agent → HTML loop</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 flex flex-col">
+                    <div class="text-xs font-semibold text-slate-500 mb-1">NEXT MILESTONE</div>
+                    <div class="font-semibold mt-auto">Working end-to-end HTML response from live agent inside the viewer</div>
+                    <div class="text-emerald-600 text-sm mt-3">Target: 1–2 weeks from contract</div>
+                </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+                <div class="px-6 py-4 border-b flex items-center justify-between bg-slate-50/60">
+                    <div class="font-semibold">Tasks</div>
+                    <div class="text-xs px-3 py-1 bg-white rounded-full border text-slate-500 font-medium">Drag to reorder (demo)</div>
+                </div>
+                
+                <div id="tasks" class="divide-y"></div>
+            </div>
+
+            <!-- Actions footer -->
+            <div class="mt-6 flex flex-wrap gap-3 items-center text-sm">
+                <button onclick="addTask()" 
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl border bg-white hover:bg-slate-50 active:bg-slate-100 transition text-sm font-medium">
+                    <span>+</span> 
+                    <span>Add custom task</span>
+                </button>
+                
+                <button onclick="simulateAgentUpdate()" 
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 transition text-white text-sm font-medium">
+                    Simulate agent-updated HTML
+                </button>
+
+                <div class="text-xs text-slate-500 ml-auto">
+                    State is persisted in localStorage • Works completely offline
+                </div>
+            </div>
+        </div>
+
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+        <script>
+            // Tailwind script
+            function initializeTailwind() {
+                // Already loaded via CDN
+            }
+
+            let tasks = [
+                { id: 1, title: "Write HTML_CONTRACT.html (self-demonstrating flagship)", done: true, phase: "PR 1", owner: "Agent + Human" },
+                { id: 2, title: "Surgical updates to AGENTS.html + README", done: true, phase: "PR 1", owner: "Human" },
+                { id: 3, title: "Seed templates/ and 1–2 high-quality example artifacts", done: false, phase: "PR 1", owner: "Agent" },
+                { id: 4, title: "Scaffold Vite + TS + Tailwind local viewer (SPA)", done: false, phase: "PR 2", owner: "Human + Agent" },
+                { id: 5, title: "Implement localStorage session + artifact persistence", done: false, phase: "PR 2", owner: "Human" },
+                { id: 6, title: "Add 'Export full prompt' for external agents (Grok TUI etc.)", done: false, phase: "PR 2", owner: "Agent" },
+                { id: 7, title: "Thin Node server: sessions + basic OpenAI-compatible proxy", done: false, phase: "PR 3", owner: "Human" },
+                { id: 8, title: "Bridge foundations (postMessage + iframe)", done: false, phase: "PR 4", owner: "Agent" },
+                { id: 9, title: "First real end-to-end: agent produces live HTML in viewer", done: false, phase: "PR 5", owner: "Human" },
+                { id: 10, title: "Electron shell + secure key storage + login window", done: false, phase: "PR 6", owner: "Human" },
+            ]
+
+            function saveState() {
+                localStorage.setItem('harness-plan-tasks-v1', JSON.stringify(tasks))
+            }
+
+            function loadState() {
+                const saved = localStorage.getItem('harness-plan-tasks-v1')
+                if (saved) {
+                    try { tasks = JSON.parse(saved) } catch(e) {}
+                }
+            }
+
+            function renderTasks() {
+                const container = document.getElementById('tasks')
+                container.innerHTML = ''
+
+                const completedCount = tasks.filter(t => t.done).length
+                const pct = Math.round((completedCount / tasks.length) * 100)
+                document.getElementById('progress').textContent = pct
+
+                tasks.forEach((task, idx) => {
+                    const el = document.createElement('div')
+                    el.className = `task-row px-6 py-4 flex items-start gap-4 ${task.done ? 'completed' : ''}`
+                    el.innerHTML = `
+                        <div class="pt-0.5">
+                            <input type="checkbox" ${task.done ? 'checked' : ''} 
+                                   class="w-4 h-4 accent-emerald-600 cursor-pointer" 
+                                   onchange="toggleTask(${task.id}, this.checked)">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-3">
+                                <span class="font-medium ${task.done ? 'line-through text-slate-400' : ''}">${task.title}</span>
+                                <span class="text-[10px] px-2 py-px rounded-full font-mono border ${task.done ? 'border-slate-200 text-slate-400' : 'border-emerald-200 text-emerald-700 bg-emerald-50'}">${task.phase}</span>
+                            </div>
+                            <div class="text-xs text-slate-500 mt-0.5">${task.owner}</div>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs">
+                            <button onclick="moveTask(${idx}, -1)" class="px-1.5 py-1 text-slate-400 hover:text-slate-700 transition">↑</button>
+                            <button onclick="moveTask(${idx}, 1)" class="px-1.5 py-1 text-slate-400 hover:text-slate-700 transition">↓</button>
+                        </div>
+                    `
+                    container.appendChild(el)
+                })
+
+                // Re-init lucide if we ever add icons dynamically
+            }
+
+            function toggleTask(id, checked) {
+                const task = tasks.find(t => t.id === id)
+                if (task) {
+                    task.done = checked
+                    saveState()
+                    renderTasks()
+                }
+            }
+
+            function moveTask(index, direction) {
+                const newIndex = index + direction
+                if (newIndex < 0 || newIndex >= tasks.length) return
+                const [item] = tasks.splice(index, 1)
+                tasks.splice(newIndex, 0, item)
+                saveState()
+                renderTasks()
+            }
+
+            function addTask() {
+                const title = prompt('New task title:')
+                if (!title || !title.trim()) return
+                const maxId = Math.max(0, ...tasks.map(t => t.id))
+                tasks.push({
+                    id: maxId + 1,
+                    title: title.trim(),
+                    done: false,
+                    phase: "Custom",
+                    owner: "You"
+                })
+                saveState()
+                renderTasks()
+            }
+
+            function requestRevision() {
+                const note = prompt('What should the agent focus on when revising the plan?', 'Improve the desktop experience and make bridge more powerful')
+                if (!note) return
+
+                // In a real harness this would call window.harness.requestFollowUp
+                const msg = `Follow-up request from the plan artifact:\n\n"${note}"\n\nPlease produce an updated interactive HTML plan that incorporates this feedback while keeping the same visual language and high craft bar.`
+                
+                navigator.clipboard.writeText(msg).then(() => {
+                    const orig = event.currentTarget
+                    alert("Follow-up prompt copied to clipboard. Paste into your agent (with HTML mode) to get a revised artifact.")
+                }).catch(() => {
+                    // Fallback: show the text
+                    prompt("Copy this follow-up prompt:", msg)
+                })
+            }
+
+            function simulateAgentUpdate() {
+                // Demo: the "agent" slightly evolves the plan by marking one more task complete
+                const incomplete = tasks.filter(t => !t.done)
+                if (incomplete.length === 0) {
+                    alert("All tasks complete in this simulation!")
+                    return
+                }
+                const random = incomplete[Math.floor(Math.random() * incomplete.length)]
+                random.done = true
+                
+                // Add a tiny new task as if the agent suggested it
+                if (Math.random() > 0.5) {
+                    const maxId = Math.max(0, ...tasks.map(t => t.id))
+                    tasks.push({
+                        id: maxId + 1,
+                        title: "Polish self-containment checklist validator (small script)",
+                        done: false,
+                        phase: "PR 7",
+                        owner: "Agent suggestion"
+                    })
+                }
+                
+                saveState()
+                renderTasks()
+                
+                // Toast-like feedback
+                const toast = document.createElement('div')
+                toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-sm px-4 py-2 rounded-2xl shadow-xl flex items-center gap-2'
+                toast.innerHTML = `<span>Agent produced updated plan HTML</span>`
+                document.body.appendChild(toast)
+                setTimeout(() => toast.remove(), 2200)
+            }
+
+            function initBridgeDemo() {
+                // Show that this works standalone but can detect harness
+                if (window.harness) {
+                    const banner = document.createElement('div')
+                    banner.className = 'fixed top-3 right-3 text-[10px] bg-emerald-700 text-white px-3 py-1 rounded-full shadow'
+                    banner.textContent = 'Harness bridge detected • richer actions enabled'
+                    document.body.appendChild(banner)
+                    
+                    // Example: we could auto-save current progress
+                    window.harness.saveState?.('plan-progress', { 
+                        completed: tasks.filter(t => t.done).length 
+                    })
+                }
+            }
+
+            // Boot
+            function boot() {
+                initializeTailwind()
+                loadState()
+                renderTasks()
+                initBridgeDemo()
+                
+                // Keyboard shortcut hint
+                document.addEventListener('keydown', (e) => {
+                    if (e.key.toLowerCase() === '?' && document.activeElement.tagName === 'BODY') {
+                        e.preventDefault()
+                        const last = tasks[tasks.length-1]
+                        if (last) alert(`Last task: ${last.title}`)
+                    }
+                })
+
+                // Demo note
+                console.log('%c[interactive-plan] Fully standalone. State in localStorage. Bridge-aware.', 'color:#64748b')
+            }
+
+            boot()
+        </script>
+    </body>
+</html>

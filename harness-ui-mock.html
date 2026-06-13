@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harness.my — UI Mock (follows image closely)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        :root {
+            --bg: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .sidebar-item {
+            transition: background-color 0.05s;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .sidebar-item.active {
+            background-color: #e0e7ff;
+            color: #1e40af;
+            font-weight: 500;
+        }
+        
+        .chat-thread {
+            font-size: 13.5px;
+            line-height: 1.6;
+        }
+        
+        .agent-html-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.05);
+            overflow: hidden;
+            margin: 8px 0;
+        }
+        
+        .diff-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            font-size: 12px;
+        }
+        
+        .file-row {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 11.5px;
+        }
+        
+        .composer {
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+        
+        .nav-icon {
+            width: 16px;
+            height: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .section-title {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            color: #64748b;
+        }
+        
+        .message-bubble {
+            border-radius: 8px;
+            padding: 6px 10px;
+        }
+    </style>
+</head>
+<body class="bg-[#f8fafc] h-screen overflow-hidden text-[#0f172a] flex">
+    <!-- LEFT SIDEBAR (matches image closely) -->
+    <div class="w-56 bg-white border-r border-[#e2e8f0] flex flex-col">
+        <!-- Top nav items -->
+        <div class="px-3 pt-3 pb-2 text-[13px]">
+            <div class="sidebar-item flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[#475569] cursor-pointer">
+                <span class="nav-icon">💬</span>
+                <span>New chat</span>
+            </div>
+            <div class="sidebar-item flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[#475569] cursor-pointer">
+                <span class="nav-icon">🔍</span>
+                <span>Search</span>
+            </div>
+            <div class="sidebar-item flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[#475569] cursor-pointer">
+                <span class="nav-icon">⚙️</span>
+                <span>Automations</span>
+            </div>
+            <div class="sidebar-item flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[#475569] cursor-pointer">
+                <span class="nav-icon">🧩</span>
+                <span>Plugins</span>
+            </div>
+        </div>
+        
+        <div class="border-t border-[#e2e8f0] mx-3 my-1"></div>
+        
+        <!-- Projects / Chats list (matches image) -->
+        <div class="px-3">
+            <div class="px-2.5 py-1 text-[11px] font-semibold text-[#64748b]">Projects</div>
+            
+            <div class="space-y-[1px] text-[13px]">
+                <div class="sidebar-item px-2.5 py-1 rounded-md flex items-center gap-2 text-[#475569]">
+                    <span>📁</span>
+                    <span>harness.my</span>
+                </div>
+                <div class="sidebar-item px-2.5 py-1 rounded-md flex items-center gap-2 text-[#475569]">
+                    <span>📁</span>
+                    <span>soundgen</span>
+                </div>
+                <div class="sidebar-item active px-2.5 py-1 rounded-md flex items-center gap-2">
+                    <span>📁</span>
+                    <span class="font-medium">Review findings report</span>
+                </div>
+                
+                <div class="mt-3 px-2.5 text-[11px] font-semibold text-[#64748b]">Chats</div>
+                
+                <div class="sidebar-item px-2.5 py-1 rounded-md text-[#475569] text-[12.5px]">Remove default model setting</div>
+                <div class="sidebar-item px-2.5 py-1 rounded-md text-[#475569] text-[12.5px]">Remove graphiy skill from every...</div>
+                <div class="sidebar-item px-2.5 py-1 rounded-md text-[#475569] text-[12.5px]">Lets brainstorm ideas on how to...</div>
+                <div class="sidebar-item px-2.5 py-1 rounded-md text-[#475569] text-[12.5px]">Does we have a default model se...</div>
+                <div class="sidebar-item px-2.5 py-1 rounded-md text-[#475569] text-[12.5px]">Show more</div>
+            </div>
+        </div>
+        
+        <div class="flex-1"></div>
+        
+        <div class="p-3 text-[11px] text-[#64748b] border-t border-[#e2e8f0]">
+            <div class="flex items-center gap-2 px-2">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MAIN CHAT AREA -->
+    <div class="flex-1 flex flex-col min-w-0">
+        <!-- Main header -->
+        <div class="h-[46px] bg-white border-b border-[#e2e8f0] px-4 flex items-center justify-between flex-shrink-0">
+            <div class="flex items-center gap-2">
+                <div class="font-semibold text-[15px]">Review findings report</div>
+                <span class="text-[#64748b]">⋯</span>
+            </div>
+            
+            <div class="flex items-center gap-2 text-xs">
+                <div class="flex items-center bg-white border border-[#e2e8f0] rounded-md px-1 py-0.5 text-[11px]">
+                    <span class="px-1.5">↻</span>
+                    <span class="px-1 text-[#64748b]">Regenerate</span>
+                </div>
+                <div class="px-2 py-0.5 text-[#64748b] hover:bg-slate-100 rounded">Share</div>
+                <div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-[10px] font-bold">H</div>
+            </div>
+        </div>
+        
+        <!-- Thread content (closely following the image) -->
+        <div class="flex-1 overflow-auto p-6 bg-[#f8fafc] chat-thread" id="chat-thread">
+            <!-- Initial agent structured response (text + rich cards) -->
+            <div class="max-w-[820px] mx-auto space-y-4">
+                
+                <!-- Follow-up + Validation (text part of agent response) -->
+                <div>
+                    <div class="font-semibold mb-1">Follow-up:</div>
+                    <ul class="list-disc pl-5 text-[#475569] space-y-0.5">
+                        <li>PR #98 added the generated UID sidecar for the new test.</li>
+                    </ul>
+                    
+                    <div class="font-semibold mt-3 mb-1">Validation:</div>
+                    <ul class="list-disc pl-5 text-[#475569] space-y-0.5 text-[13px]">
+                        <li>CI green on both PRs.</li>
+                        <li>Local full suite passed: 124 suites, 515 cases, 0 failed.</li>
+                        <li>Local <span class="font-mono bg-slate-100 px-0.5 rounded">main</span> is clean and synced at <span class="font-mono">df20e42d</span>.</li>
+                    </ul>
+                </div>
+                
+                <div class="text-[#475569]">
+                    For your next manual run, wait a moment on the main menu, then press Start Run. In the TimeTrace line for <span class="font-mono bg-slate-100 px-0.5 rounded text-xs">after_resource_load</span>, we want to see <span class="font-mono">cache_hit=true</span> and <span class="font-mono">load_ms</span> far below the previous ~1300ms.
+                </div>
+                
+                <!-- First rich "HTML card" response (analogous to the "Edited 6 files" block in the image) -->
+                <div class="agent-html-card">
+                    <div class="px-3 py-2 bg-[#f8fafc] border-b border-[#e2e8f0] flex items-center gap-2 text-xs">
+                        <span class="font-semibold text-emerald-700">HTML Card Response #1</span>
+                        <span class="text-[#64748b]">— interactive plan (agent output)</span>
+                    </div>
+                    
+                    <!-- Embedded rich HTML preview (our interactive plan style, but fitted as a "card") -->
+                    <div class="p-3 text-[12.5px]">
+                        <div class="font-medium mb-2">Interactive Roadmap — Harness.my</div>
+                        
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                            <div class="bg-white border border-[#e2e8f0] rounded p-2">
+                                <div class="text-emerald-600 text-[10px] font-medium">PROGRESS</div>
+                                <div class="text-xl font-semibold tabular-nums">42%</div>
+                                <div class="text-[10px] text-[#64748b]">8 / 19 tasks</div>
+                            </div>
+                            <div class="bg-white border border-[#e2e8f0] rounded p-2 text-[11px]">
+                                <div class="font-medium">Next milestone</div>
+                                <div class="text-[#475569]">Working end-to-end HTML response</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-xs">
+                            <div class="flex items-center gap-2 mb-1">
+                                <input type="checkbox" checked class="accent-emerald-600"> 
+                                <span class="line-through text-[#64748b]">HTML_CONTRACT.html created</span>
+                            </div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <input type="checkbox" class="accent-emerald-600"> 
+                                <span>Conversation-based chat with inline HTML cards</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" class="accent-emerald-600"> 
+                                <span>Follow Cursor/Claude Code UI chrome closely</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-2 text-[10px] flex gap-2">
+                            <button onclick="this.innerText='Updated in thread!'" class="px-2 py-0.5 text-emerald-700 border border-emerald-200 rounded text-[10px]">Mark done inside card</button>
+                            <button onclick="expandHTMLCard(this)" class="px-2 py-0.5 bg-emerald-600 text-white rounded text-[10px]">Expand full HTML</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-[#64748b] text-xs">When timer stops, nothing happens (no match, no enemy attack)</div>
+                
+                <!-- Second agent turn -->
+                <div class="pt-2">
+                    <div class="text-[#475569] text-[13px]">
+                        <span class="font-medium">Worked for 7m 12s &gt;</span><br>
+                        Fixed and opened PR #42: <span class="text-emerald-700">Clarify conversation + HTML card responses</span>.
+                    </div>
+                    
+                    <div class="mt-2 text-xs">
+                        <div>Local validation passed:</div>
+                        <ul class="list-disc pl-5 text-[#64748b]">
+                            <li>gdformat ✓</li>
+                            <li>Conversation thread renders HTML cards inline ✓</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Second HTML card response (richer) -->
+                    <div class="agent-html-card mt-3">
+                        <div class="px-3 py-1.5 bg-[#f8fafc] border-b border-[#e2e8f0] flex items-center text-xs">
+                            <span class="font-semibold text-emerald-700">HTML Card Response #2</span>
+                            <span class="ml-2 text-[#64748b]">— dashboard with progress + sound demo</span>
+                        </div>
+                        <div class="p-3">
+                            <div class="flex justify-between text-xs mb-2">
+                                <div><span class="font-medium">Progress</span> <span class="text-emerald-600">75%</span></div>
+                                <div class="text-emerald-600">12 tasks</div>
+                            </div>
+                            
+                            <div class="h-1.5 bg-emerald-100 rounded mb-2"><div class="h-1.5 bg-emerald-600 rounded" style="width:75%"></div></div>
+                            
+                            <button onclick="playSoundDemo(this)" class="text-xs px-3 py-1 bg-white border border-[#e2e8f0] rounded hover:bg-slate-50">🔊 Play status sound (inside card)</button>
+                            
+                            <div class="mt-2 text-[10px] text-[#64748b]">This entire block is the agent’s HTML response rendered as a card in the conversation.</div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- BOTTOM COMPOSER (matches the image input area very closely) -->
+        <div class="composer p-3">
+            <div class="max-w-[820px] mx-auto">
+                <div class="flex items-center gap-2 bg-white border border-[#e2e8f0] rounded-2xl px-2 py-1.5 shadow-sm">
+                    <button class="px-2 text-[#64748b] hover:text-[#475569]" title="Attach">＋</button>
+                    
+                    <input id="prompt-input"
+                           type="text"
+                           class="flex-1 outline-none text-[13.5px] placeholder:text-[#94a3b8]"
+                           placeholder="Ask for follow-up changes or new HTML card..."
+                           onkeydown="if (event.key === 'Enter') sendMessage()">
+                    
+                    <div class="flex items-center gap-1 pr-1">
+                        <select class="text-xs bg-transparent outline-none text-[#64748b]">
+                            <option>HTML Mode</option>
+                            <option>Claude 3.5</option>
+                            <option>Grok</option>
+                        </select>
+                        
+                        <button onclick="sendMessage()"
+                                class="ml-1 px-3 py-1 bg-[#0f172a] hover:bg-black text-white text-xs rounded-xl font-medium flex items-center gap-1">
+                            <span>Send</span>
+                            <span class="text-[10px]">↑</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="text-[10px] text-[#94a3b8] mt-1 px-1 flex items-center gap-2">
+                    <span>Agent will reply with a rich HTML card in the conversation thread (not text).</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- RIGHT SIDEBAR (Environment / context panel, closely matching image) -->
+    <div class="w-72 bg-white border-l border-[#e2e8f0] flex flex-col text-xs flex-shrink-0">
+        <div class="px-3 py-2 border-b font-semibold flex items-center justify-between">
+            <span>Environment</span>
+            <span class="text-[#64748b]">⋯</span>
+        </div>
+        
+        <div class="p-3 space-y-4 overflow-auto flex-1">
+            <!-- Changes section -->
+            <div>
+                <div class="section-title mb-1.5">Changes</div>
+                <div class="bg-[#f8fafc] border border-[#e2e8f0] rounded p-2 text-[11px]">
+                    <div class="flex items-center justify-between">
+                        <div class="text-emerald-600">● Local</div>
+                        <div class="text-emerald-600">clean</div>
+                    </div>
+                    <div class="text-[#64748b] mt-0.5">No uncommitted HTML card changes</div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="section-title mb-1">Progress</div>
+                <div class="space-y-1 text-[12px]">
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" checked class="accent-emerald-600">
+                        <span>Clarify conversation + HTML cards</span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" checked class="accent-emerald-600">
+                        <span>Follow the provided screenshot UI closely</span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" class="accent-emerald-600">
+                        <span>Embed rich interactive HTML cards in thread</span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" class="accent-emerald-600">
+                        <span>Support images / sound / JS inside cards</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div>
+                <div class="section-title mb-1">Sub-agents</div>
+                <div class="text-[11px] space-y-0.5">
+                    <div class="flex items-center gap-1.5"><span class="text-emerald-500">●</span> HTML Card Generator</div>
+                    <div class="flex items-center gap-1.5"><span class="text-blue-500">●</span> Conversation Thread</div>
+                    <div class="flex items-center gap-1.5"><span class="text-violet-500">●</span> Rich Media (image/sound)</div>
+                </div>
+            </div>
+            
+            <div class="pt-1">
+                <div class="text-[10px] text-[#64748b]">Sources: 2 HTML templates • 1 interactive example</div>
+            </div>
+        </div>
+        
+        <div class="p-2 border-t text-[10px] text-[#64748b]">
+            Current card: <span class="text-emerald-700 font-medium">Interactive Roadmap v2</span>
+        </div>
+    </div>
+    
+    <script>
+        function sendMessage() {
+            const input = document.getElementById('prompt-input');
+            const val = input.value.trim();
+            if (!val) return;
+            
+            const thread = document.getElementById('chat-thread');
+            
+            // Append user message (styled similarly to image)
+            const userMsg = document.createElement('div');
+            userMsg.className = 'max-w-[820px] mx-auto mt-3';
+            userMsg.innerHTML = `
+                <div class="flex justify-end">
+                    <div class="message-bubble bg-[#0f172a] text-white px-3 py-2 text-sm max-w-[70%]">
+                        ${val}
+                    </div>
+                </div>
+            `;
+            thread.appendChild(userMsg);
+            thread.scrollTop = thread.scrollHeight;
+            
+            // Simulate agent thinking, then append a new rich HTML card response
+            setTimeout(() => {
+                const agentMsg = document.createElement('div');
+                agentMsg.className = 'max-w-[820px] mx-auto mt-3';
+                
+                let htmlCardInner = '';
+                const lower = val.toLowerCase();
+                
+                if (lower.includes('card') || lower.includes('plan') || lower.includes('todo')) {
+                    htmlCardInner = `
+                        <div class="px-3 py-2 bg-[#f8fafc] text-[11px] border-b">HTML Card Response • updated from your prompt</div>
+                        <div class="p-3">
+                            <div class="font-medium mb-1.5">Updated Interactive Plan</div>
+                            <div class="text-xs">• Added "${val}" as new top priority<br>• Progress now 58%</div>
+                            <button onclick="expandHTMLCard(this)" class="mt-2 text-[10px] px-2 py-0.5 border rounded">Expand this card</button>
+                        </div>
+                    `;
+                } else if (lower.includes('sound') || lower.includes('image')) {
+                    htmlCardInner = `
+                        <div class="px-3 py-2 bg-[#f8fafc] text-[11px] border-b">HTML Card Response (rich media)</div>
+                        <div class="p-3 text-xs">
+                            <div>Rich response including image placeholder + sound control.</div>
+                            <button onclick="playSoundDemo(this)" class="mt-2 px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded text-[10px]">Play embedded sound</button>
+                            <div class="mt-2 h-8 w-8 bg-gradient-to-br from-violet-200 to-emerald-200 rounded flex items-center justify-center text-[9px]">IMG</div>
+                        </div>
+                    `;
+                } else {
+                    htmlCardInner = `
+                        <div class="px-3 py-2 bg-[#f8fafc] text-[11px] border-b">HTML Card Response</div>
+                        <div class="p-3 text-xs">
+                            Agent produced new self-contained HTML card for: <span class="font-mono text-[10px]">${val}</span>
+                            <div class="mt-2">The full interactive response is rendered here (CSS + JS + logic included).</div>
+                            <button onclick="expandHTMLCard(this)" class="mt-2 text-xs px-2 py-0.5 bg-emerald-600 text-white rounded">View full HTML</button>
+                        </div>
+                    `;
+                }
+                
+                agentMsg.innerHTML = `
+                    <div class="agent-html-card">
+                        ${htmlCardInner}
+                    </div>
+                `;
+                
+                thread.appendChild(agentMsg);
+                thread.scrollTop = thread.scrollHeight;
+                
+                // Also add to right sidebar conceptually (static for mock)
+            }, 750);
+            
+            input.value = '';
+        }
+        
+        function expandHTMLCard(el) {
+            const modal = document.createElement('div');
+            modal.className = `fixed inset-0 bg-black/70 flex items-center justify-center z-[100] p-6`;
+            modal.innerHTML = `
+                <div class="bg-white w-full max-w-[960px] rounded-2xl overflow-hidden shadow-2xl max-h-[88vh] flex flex-col">
+                    <div class="px-4 py-3 border-b flex justify-between items-center text-sm">
+                        <div class="font-semibold">Expanded HTML Card (full agent response)</div>
+                        <button onclick="this.closest('.fixed').remove()" class="text-[#64748b] hover:text-black px-3">Close</button>
+                    </div>
+                    <div class="flex-1 overflow-auto p-6 bg-[#f8fafc]">
+                        ${el.closest('.agent-html-card').innerHTML}
+                    </div>
+                    <div class="px-4 py-2 border-t text-[10px] text-[#64748b]">
+                        This is the exact standalone HTML the agent produced. It can be saved, forked, or opened in a new tab.
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function playSoundDemo(btn) {
+            btn.innerHTML = '🔊 Playing (demo)...';
+            setTimeout(() => {
+                btn.innerHTML = '🔊 Play embedded sound';
+                const note = document.createElement('div');
+                note.className = 'text-[10px] text-emerald-600 mt-1';
+                note.textContent = '♪ Sound would play here (HTML <audio> or Web Audio in real card)';
+                btn.parentElement.appendChild(note);
+                setTimeout(() => note.remove(), 2200);
+            }, 900);
+        }
+        
+        // Boot: focus the composer like the image
+        function boot() {
+            const input = document.getElementById('prompt-input');
+            if (input) {
+                setTimeout(() => input.focus(), 650);
+            }
+            
+            // Make the initial embedded cards a bit more alive
+            console.log('%c[harness-ui-mock] Closely following the provided screenshot UI. Conversation thread + rich HTML cards as agent responses. Composer at bottom of main column.', 'color:#64748b');
+        }
+        
+        boot();
+    </script>
+</body>
+</html>

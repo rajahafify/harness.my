@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HTML_CONTRACT • HTML as First-Class Agent UI</title>
+        <style>
+            :root {
+                --bg: #f8fafc;
+                --surface: #ffffff;
+                --text: #0f172a;
+                --text-muted: #475569;
+                --accent: #6366f1;
+                --accent-light: #e0e7ff;
+                --success: #10b981;
+                --success-bg: #ecfdf5;
+                --warning: #f59e0b;
+                --warning-bg: #fffbeb;
+                --border: #e2e8f0;
+                --card-shadow:
+                    0 4px 6px -1px rgb(15 23 42 / 0.07),
+                    0 2px 4px -2px rgb(15 23 42 / 0.07);
+                --emerald: #059669;
+                --emerald-light: #d1fae5;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    Roboto,
+                    "Helvetica Neue",
+                    Arial,
+                    sans-serif;
+                line-height: 1.7;
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 32px 24px 80px;
+                color: var(--text);
+                background: var(--bg);
+                font-size: 15.5px;
+            }
+
+            .hero {
+                text-align: center;
+                margin-bottom: 28px;
+                padding-bottom: 22px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .hero .eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: var(--emerald-light);
+                color: var(--emerald);
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+                padding: 4px 14px;
+                border-radius: 999px;
+                margin-bottom: 12px;
+            }
+
+            .hero h1 {
+                font-size: 2.25rem;
+                margin: 0 0 8px;
+                color: #0f172a;
+                letter-spacing: -0.02em;
+            }
+
+            .hero .subtitle {
+                font-size: 1.05rem;
+                color: var(--text-muted);
+                margin: 0;
+            }
+
+            .badge {
+                display: inline-block;
+                font-size: 11px;
+                font-weight: 700;
+                padding: 2px 9px;
+                border-radius: 999px;
+                background: rgba(5, 150, 105, 0.15);
+                color: var(--emerald);
+                margin-left: 8px;
+                vertical-align: middle;
+            }
+
+            .intro {
+                font-size: 1rem;
+                color: var(--text-muted);
+                max-width: 68ch;
+                margin: 0 auto 24px;
+            }
+
+            .toc {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin: 24px 0 28px;
+            }
+
+            .toc a {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 0.875rem;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                padding: 6px 14px;
+                border-radius: 999px;
+                text-decoration: none;
+                color: var(--text);
+                transition: all 0.1s ease;
+                box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+            }
+
+            .toc a:hover {
+                border-color: var(--emerald);
+                color: var(--emerald);
+                transform: translateY(-1px);
+            }
+
+            .principle-card,
+            .section-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                box-shadow: var(--card-shadow);
+                margin-bottom: 22px;
+                overflow: hidden;
+            }
+
+            .card-head {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 18px 24px 14px;
+                background: linear-gradient(to right, #f8fafc, #ffffff);
+                border-bottom: 1px solid var(--border);
+            }
+
+            .num {
+                width: 32px;
+                height: 32px;
+                flex-shrink: 0;
+                border-radius: 10px;
+                background: var(--emerald);
+                color: white;
+                font-weight: 800;
+                font-size: 0.95rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 4px rgb(5 150 105 / 0.3);
+            }
+
+            .icon {
+                font-size: 1.35rem;
+                line-height: 1;
+                margin-right: 2px;
+            }
+
+            .card-head h2 {
+                margin: 0;
+                font-size: 1.15rem;
+                color: #0f172a;
+                font-weight: 700;
+                letter-spacing: -0.01em;
+            }
+
+            .card-body {
+                padding: 22px 24px 26px;
+            }
+
+            .card-body p {
+                margin: 0.65rem 0;
+            }
+
+            .card-body ul {
+                padding-left: 1.1em;
+                margin: 0.7rem 0;
+            }
+
+            .card-body li {
+                margin: 0.4rem 0;
+            }
+
+            .card-body strong {
+                color: #0f172a;
+            }
+
+            .mini {
+                font-size: 0.9rem;
+                color: var(--text-muted);
+            }
+
+            pre,
+            .prompt-box {
+                background: #0f172a;
+                color: #e0e7ff;
+                padding: 18px 20px;
+                border-radius: 12px;
+                overflow-x: auto;
+                font-size: 0.9rem;
+                line-height: 1.55;
+                margin: 14px 0;
+                box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.3);
+                white-space: pre-wrap;
+            }
+
+            code {
+                font-family:
+                    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+                    "Liberation Mono", "Courier New", monospace;
+            }
+
+            .copy-btn {
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                background: #1e2937;
+                color: #94a3b8;
+                border: 1px solid #334155;
+                font-size: 12px;
+                padding: 4px 10px;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.1s;
+            }
+
+            .copy-btn:hover {
+                background: #334155;
+                color: #e0e7ff;
+            }
+
+            .prompt-wrapper {
+                position: relative;
+            }
+
+            .archetype {
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 14px 16px;
+                margin: 10px 0;
+                background: #f8fafc;
+            }
+
+            .archetype h4 {
+                margin: 0 0 6px;
+                font-size: 0.98rem;
+                color: var(--emerald);
+            }
+
+            .success-box {
+                background: var(--success-bg);
+                border: 1px solid #a7f3d0;
+                border-radius: 14px;
+                padding: 20px 22px;
+                margin: 24px 0 12px;
+            }
+
+            .success-box .label {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 700;
+                color: #065f46;
+                font-size: 0.95rem;
+                margin-bottom: 6px;
+            }
+
+            .design-callout {
+                background: #f0f9ff;
+                border: 1px solid #bae6fd;
+                padding: 16px 18px;
+                border-radius: 12px;
+                margin: 16px 0;
+            }
+
+            .bridge-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 12px 0;
+                font-size: 0.9rem;
+            }
+
+            .bridge-table th,
+            .bridge-table td {
+                text-align: left;
+                padding: 8px 10px;
+                border-bottom: 1px solid var(--border);
+                vertical-align: top;
+            }
+
+            .bridge-table th {
+                background: #f8fafc;
+                font-weight: 600;
+                color: #334155;
+            }
+
+            .example-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 14px;
+                margin: 16px 0;
+            }
+
+            .example-card {
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 14px;
+                background: #fff;
+                transition: box-shadow 0.1s;
+            }
+
+            .example-card:hover {
+                box-shadow: 0 4px 6px -1px rgb(15 23 42 / 0.1);
+            }
+
+            .example-card .label {
+                font-size: 0.8rem;
+                font-weight: 700;
+                color: var(--emerald);
+                margin-bottom: 4px;
+            }
+
+            footer {
+                margin-top: 52px;
+                padding-top: 18px;
+                border-top: 1px solid var(--border);
+                font-size: 0.8rem;
+                color: var(--text-muted);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .footer-note {
+                background: var(--surface);
+                padding: 2px 8px;
+                border-radius: 6px;
+                border: 1px solid var(--border);
+            }
+
+            .rule {
+                background: #fefce8;
+                border-left: 4px solid #ca8a04;
+                padding: 10px 14px;
+                margin: 10px 0;
+                border-radius: 0 8px 8px 0;
+                font-size: 0.95rem;
+            }
+
+            @media (max-width: 640px) {
+                body {
+                    padding: 24px 16px 48px;
+                }
+                .hero h1 {
+                    font-size: 1.9rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Hero -->
+        <div class="hero">
+            <div class="eyebrow">
+                <span>AGENT CONTRACT</span>
+                <span class="badge">v1 • HTML FIRST</span>
+            </div>
+            <h1>HTML_CONTRACT</h1>
+            <p class="subtitle">
+                Agents respond with complete, self-contained, interactive HTML
+                by default.
+            </p>
+        </div>
+
+        <p class="intro">
+            This is the canonical contract for <strong>Harness.my</strong>. When
+            operating in this harness (or when you want the same behavior
+            elsewhere), every substantial response must be a single, beautiful,
+            fully functional <code>&lt;!doctype html&gt;</code> document.
+            Plain text or markdown is the exception, not the rule.
+        </p>
+
+        <!-- Quick nav -->
+        <nav class="toc" aria-label="Quick navigation">
+            <a href="#why">Why HTML First</a>
+            <a href="#contract">The Contract (copy)</a>
+            <a href="#archetypes">Response Archetypes</a>
+            <a href="#rules">Quality Rules</a>
+            <a href="#bridge">Harness Bridge API</a>
+            <a href="#usage">Usage Guide</a>
+            <a href="#examples">Examples &amp; Patterns</a>
+        </nav>
+
+        <!-- Why -->
+        <section id="why" class="section-card">
+            <div class="card-head">
+                <span class="icon">🖥️</span>
+                <h2>Why HTML as First-Class UI</h2>
+            </div>
+            <div class="card-body">
+                <p>
+                    HTML is portable, instantly viewable, self-describing, and
+                    capable of rich interactivity without any build step for
+                    the recipient. A well-crafted agent HTML response can be:
+                </p>
+                <ul>
+                    <li>
+                        A living plan or spec with expandable sections, filters,
+                        and editable tasks.
+                    </li>
+                    <li>A functional UI prototype for the feature being built.</li>
+                    <li>
+                        An interactive dashboard, decision matrix, or visual
+                        explorer over code or data.
+                    </li>
+                    <li>
+                        A complete small tool or simulator that the user can
+                        immediately use and share.
+                    </li>
+                </ul>
+                <p class="mini">
+                    Text is for quick confirmations. HTML is the default medium
+                    for thinking, planning, building, and communicating with
+                    intent.
+                </p>
+            </div>
+        </section>
+
+        <!-- The Contract -->
+        <section id="contract" class="section-card">
+            <div class="card-head">
+                <span class="icon">📜</span>
+                <h2>The Agent Contract — System Prompt</h2>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong
+                        >Copy the block below and use it as (or prepend to)
+                        your system instructions when you want HTML-first
+                        behavior.</strong
+                    >
+                    This contract is deliberately strict and opinionated.
+                </p>
+
+                <div class="prompt-wrapper">
+                    <button class="copy-btn" onclick="copyPrompt(this)">
+                        Copy
+                    </button>
+                    <pre id="contract-prompt"><code>You are operating in HTML-first mode for Harness.my.
+
+Your ONLY final output for this turn MUST be one complete, self-contained, production-quality HTML5 document beginning with &lt;!doctype html&gt; and ending with &lt;/html&gt;.
+
+Rules (non-negotiable):
+1. Standalone &amp; self-contained. The HTML must render perfectly when opened directly from disk (file://) or served. Use Tailwind via CDN (https://tailwindcss.com/docs/installation/play-cdn) or inline styles + vanilla JS. You may use other popular CDNs (Lucide icons, Chart.js, etc.) but keep the document one file.
+2. Beautiful by default. Apply the design principles from AGENTS.html: strong visual hierarchy, generous whitespace, clear typography, cards, subtle shadows, accent colors, icons, hover states, and intentional layout. Never ship plain unstyled markup.
+3. Purposeful interactivity. The page should feel like a working tool or artifact for the user's query — not a static report. Use JS for tabs, filters, editable fields, live previews, sortable tables, mini-simulators, etc. Store transient state in localStorage when appropriate so the artifact remains useful after reload.
+4. Progressive enhancement &amp; bridges. The HTML must be fully usable standalone. When loaded inside a Harness (iframe or webview) it will receive a small global `window.harness` bridge (see HTML_CONTRACT.html). Detect its presence and unlock richer behaviors (request follow-up, persist state, request workspace files) without breaking when the bridge is absent.
+5. No markdown fences in the final response. Output ONLY the raw HTML document. Do not wrap it in ```html ... ``` or add any leading/trailing prose.
+6. Quality bar. The result must feel intentional and crafted: consistent spacing (use a clear scale), accessible (labels, contrast, keyboard), responsive, and fast. Prefer clarity and craft over cleverness.
+7. Response archetypes. Choose the right scale:
+   - Quick-card: compact, delightful single-card or small dashboard answer for focused questions.
+   - Full experience: rich single-page app / canvas for planning, exploration, or prototyping.
+   - Multi-panel / linked: several focused sections or cards with navigation, or offer "open in new artifact" actions via the bridge.
+
+Context you may receive: the user's query, previous HTML artifacts in the session (summaries or full when relevant), workspace file summaries, and the current Harness session metadata.
+
+The harness UI is a conversation-based chat exactly like Codex / Claude Code:
+- Main surface is the scrolling conversation: user sends text prompts.
+- You (the agent) respond in the thread with a rich "HTML card" — your complete self-contained HTML (CSS, JS, images, sound, interactive elements, etc.). This is the response, not text.
+- The prompt input is at the bottom of the chat.
+- Your HTML card appears inline in the conversation and can be expanded by the user to a larger view. The conversation continues with follow-up text prompts.
+- Left sidebar may show context or list of cards in the thread.
+
+When the user asks a question, your response is the rich HTML card/artifact that best advances their goal. Think, design, and deliver entirely as HTML. The output must be a complete standalone <!doctype html> that renders beautifully as a card in the chat (and fully when expanded or opened alone). It can contain its own UI, media, logic, and even "actions" that the user can take inside the card. The HTML is the message.
+
+If the query is truly trivial ("yes/no", one-word), you may still wrap the answer in a minimal polished card — consistency matters.
+
+Begin the document immediately. No preamble outside the HTML.</code></pre>
+                </div>
+
+                <p class="mini" style="margin-top: 12px">
+                    Paste the above (or the shorter "HTML mode: on" variant when
+                    context length is tight) at the start of your system
+                    message or as a strong prefix to the user turn.
+                </p>
+            </div>
+        </section>
+
+        <!-- Archetypes -->
+        <section id="archetypes" class="section-card">
+            <div class="card-head">
+                <span class="icon">🧩</span>
+                <h2>Response Archetypes</h2>
+            </div>
+            <div class="card-body">
+                <div class="archetype">
+                    <h4>1. Quick Card / Focused Answer</h4>
+                    <p class="mini">
+                        Compact, elegant single surface. Hero statement or
+                        result + 1–3 supporting sections + clear next actions.
+                        Ideal for decisions, summaries, small analyses.
+                    </p>
+                </div>
+                <div class="archetype">
+                    <h4>2. Full Experience / Canvas</h4>
+                    <p class="mini">
+                        The main working surface for the task. Sidebar or top
+                        nav, primary content area that can be rich (table +
+                        detail pane, live editor + preview, interactive map,
+                        etc.). Use generous but not wasteful space.
+                    </p>
+                </div>
+                <div class="archetype">
+                    <h4>3. Multi-Panel / Session Artifact</h4>
+                    <p class="mini">
+                        Several related views or steps presented together with
+                        clear navigation (tabs, accordion, stepper). Or emit
+                        one focused artifact and use the bridge to spawn
+                        siblings ("create follow-up artifact for X").
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quality Rules -->
+        <section id="rules" class="section-card">
+            <div class="card-head">
+                <span class="icon">✅</span>
+                <h2>Quality Rules &amp; Self-Containment</h2>
+            </div>
+            <div class="card-body">
+                <div class="rule">
+                    <strong>Always emit a complete document.</strong> From
+                    doctype to closing html tag. No external file dependencies
+                    unless loaded from trusted CDN.
+                </div>
+                <ul>
+                    <li>
+                        <strong>Design system:</strong> Reuse a small consistent
+                        set of tokens (spacing, type scale, colors). The
+                        AGENTS.html palette and card patterns are a good
+                        starting point.
+                    </li>
+                    <li>
+                        <strong>Typography &amp; space:</strong> Comfortable
+                        line length (≈68ch for prose), 1.5–1.7 line-height,
+                        generous margins between sections.
+                    </li>
+                    <li>
+                        <strong>Icons:</strong> Lucide (CDN) or inline SVG.
+                        Never rely on font icons that may not load.
+                    </li>
+                    <li>
+                        <strong>Interactivity:</strong> At least one meaningful
+                        interactive element beyond "read-only". Filters,
+                        toggles, live computation, editable fields, or
+                        simulations.
+                    </li>
+                    <li>
+                        <strong>Accessibility:</strong> Proper headings,
+                        labels, focus styles, sufficient contrast. Keyboard
+                        operable where it matters.
+                    </li>
+                    <li>
+                        <strong>Performance:</strong> Keep total size
+                        reasonable. Defer heavy libs or use tiny alternatives.
+                        No 500kB of unused framework for a dashboard.
+                    </li>
+                    <li>
+                        <strong>Graceful degradation:</strong> The page must be
+                        excellent when the harness bridge is missing.
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Bridge -->
+        <section id="bridge" class="section-card">
+            <div class="card-head">
+                <span class="icon">🔌</span>
+                <h2>Harness Bridge API (v0)</h2>
+            </div>
+            <div class="card-body">
+                <p>
+                    When your HTML is rendered inside a Harness frame (iframe,
+                    webview, or desktop container), a small bridge object is
+                    injected:
+                </p>
+                <pre><code>window.harness = {
+  // Request the agent continue the conversation
+  requestFollowUp(action: string, payload?: any): void,
+
+  // Persist JSON state for this artifact (survives reloads in the session)
+  saveState(key: string, value: any): void,
+  loadState(key: string): any,
+
+  // Ask the harness to surface a file or workspace context
+  requestContext(type: 'file' | 'summary' | 'selection'): Promise&lt;any&gt;,
+
+  // Signal that the user considers this artifact "done" for the current goal
+  markComplete(note?: string): void,
+
+  // Version of the bridge / harness host
+  version: string
+}</code></pre>
+
+                <p class="mini">
+                    Always feature-detect:
+                    <code>if (window.harness) { ... }</code>. Never assume it
+                    exists.
+                </p>
+
+                <p>
+                    <strong>Bridge capabilities in v1 are intentionally
+                        small.</strong>
+                    The goal is to let the generated HTML feel alive inside the
+                    harness without turning every artifact into a full remote
+                    procedure call surface.
+                </p>
+
+                <table class="bridge-table">
+                    <tr>
+                        <th>Capability</th>
+                        <th>Recommended Use</th>
+                        <th>Approval</th>
+                    </tr>
+                    <tr>
+                        <td><code>requestFollowUp</code></td>
+                        <td>
+                            "Revise this plan", "Generate code for selected
+                            item", "Simulate with these parameters"
+                        </td>
+                        <td>Automatic (user initiated)</td>
+                    </tr>
+                    <tr>
+                        <td><code>saveState</code> / load</td>
+                        <td>
+                            Current filters, expanded nodes, user notes,
+                            partial form state
+                        </td>
+                        <td>None (artifact scoped)</td>
+                    </tr>
+                    <tr>
+                        <td><code>requestContext</code></td>
+                        <td>
+                            "Give me the current file tree summary" or "read
+                            this specific file"
+                        </td>
+                        <td>User consent surface in frame</td>
+                    </tr>
+                    <tr>
+                        <td><code>markComplete</code></td>
+                        <td>
+                            Clean close of a planning or exploration flow
+                        </td>
+                        <td>None</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Usage -->
+        <section id="usage" class="section-card">
+            <div class="card-head">
+                <span class="icon">🚀</span>
+                <h2>How to Use This Contract</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Inside this Harness (exactly like Codex / Claude Code)</strong></p>
+                <p>
+                    The harness is a <strong>conversation-based chat interface</strong>:
+                </p>
+                <ul>
+                    <li>The main area is the scrolling conversation thread: user text prompts followed by agent responses.</li>
+                    <li>Agent responses appear as rich <strong>"HTML cards"</strong> inline in the chat — your self-contained HTML output (with CSS, JS, images, sound, etc.). Not plain text.</li>
+                    <li>The prompt input is at the bottom of the main chat area (part of the primary conversation column).</li>
+                    <li>HTML cards are interactive inside the thread. Users can expand any card to a larger focused preview or full view while continuing the conversation.</li>
+                    <li>Optional left sidebar for context, list of cards in the thread, and workspace files.</li>
+                </ul>
+                <p>
+                    The harness will automatically include the contract + recent
+                    context + workspace awareness when you send a query in
+                    "HTML mode" (the default). Your entire response becomes the
+                    rich HTML card shown directly in the conversation thread.
+                </p>
+
+                <p><strong>With existing Grok TUI / other agents right now</strong></p>
+                <ol>
+                    <li>
+                        Copy the contract prompt above (or the shorter version
+                        in <code>templates/prompts/</code>).
+                    </li>
+                    <li>
+                        Paste it near the top of your conversation or as a
+                        persistent rule.
+                    </li>
+                    <li>
+                        Optionally attach or describe previous artifacts and
+                        relevant files.
+                    </li>
+                    <li>
+                        Ask your question. The agent's reply should be raw
+                        HTML.
+                    </li>
+                    <li>
+                        Save the response as <code>.html</code> and open it.
+                        Drag it into the future harness viewer.
+                    </li>
+                </ol>
+
+                <div class="design-callout">
+                    <strong>Pro tip:</strong> After the first HTML response,
+                    you can say "Continue in HTML mode using the previous
+                    artifact as context" and attach or reference the saved
+                    file. The agent will usually produce an evolved or
+                    follow-up HTML.
+                </div>
+
+                <p>
+                    <strong>Claude, Cursor, Aider, etc.:</strong> The same
+                    contract works. Strong models respect the "output ONLY the
+                    raw HTML" instruction when it is repeated clearly and
+                    reinforced with examples.
+                </p>
+            </div>
+        </section>
+
+        <!-- Examples -->
+        <section id="examples" class="section-card">
+            <div class="card-head">
+                <span class="icon">🖼️</span>
+                <h2>Examples &amp; Reference Patterns</h2>
+            </div>
+            <div class="card-body">
+                <p>
+                    These committed examples live in the repository and serve as
+                    both demonstrations and few-shot material. Study them. Copy
+                    patterns from them. Improve them.
+                </p>
+
+                <div class="example-grid">
+                    <div class="example-card">
+                        <div class="label">PLAN EXPLORER</div>
+                        <strong>Interactive roadmap / task plan</strong>
+                        <p class="mini">
+                            Checkable items, progress, "revise with agent"
+                            actions, notes. Good for project planning turns.
+                        </p>
+                        <p>
+                            <a href="examples/interactive-plan.html"
+                                >Open example →</a
+                            >
+                        </p>
+                    </div>
+                    <div class="example-card">
+                        <div class="label">TRADEOFF MATRIX</div>
+                        <strong>Decision support surface</strong>
+                        <p class="mini">
+                            Criteria × options table, live scoring, notes,
+                            recommendation callout. Excellent for architecture
+                            or tool choices.
+                        </p>
+                        <p class="mini">See templates/ and future examples/</p>
+                    </div>
+                </div>
+
+                <p class="mini">
+                    More examples will be added as the harness is used. Every
+                    real task is an opportunity to produce a new reference
+                    artifact.
+                </p>
+            </div>
+        </section>
+
+        <!-- Success -->
+        <div class="success-box">
+            <div class="label">
+                <span>✨</span>
+                <span>This contract is working when</span>
+            </div>
+            <p>
+                Almost every agent turn in the harness produces a single
+                beautiful, useful, interactive HTML that renders in the large
+                preview area of the main column (above the prompt input). The
+                user sends prompts from the input in the main column; the agent
+                replies directly with the HTML (no text response). The HTML
+                feels like the working surface / product of the interaction.
+            </p>
+        </div>
+
+        <footer>
+            <div>
+                Part of <strong>Harness.my</strong>. This file (HTML_CONTRACT.html)
+                is the living specification.
+            </div>
+            <div class="footer-note">
+                Edit directly • HTML is preferred • Design matters
+            </div>
+        </footer>
+
+        <script>
+            function copyPrompt(btn) {
+                const pre = document.getElementById('contract-prompt');
+                const text = pre.innerText || pre.textContent;
+                navigator.clipboard.writeText(text.trim()).then(() => {
+                    const original = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        btn.textContent = original;
+                    }, 1400);
+                }).catch(() => {
+                    // Fallback for very old browsers or file:// restrictions
+                    const ta = document.createElement('textarea');
+                    ta.value = text.trim();
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    const original = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => { btn.textContent = original; }, 1400);
+                });
+            }
+
+            // Small enhancement: keyboard hint
+            console.log('%c[HTML_CONTRACT] Copy button + bridge detection ready.', 'color:#64748b');
+        </script>
+    </body>
+</html>

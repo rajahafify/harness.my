@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CHANGES • Harness.my UI Progress</title>
+        <style>
+            :root {
+                --bg: #f8fafc;
+                --surface: #ffffff;
+                --text: #0f172a;
+                --text-muted: #475569;
+                --accent: #6366f1;
+                --accent-light: #e0e7ff;
+                --success: #10b981;
+                --success-bg: #ecfdf5;
+                --warning: #f59e0b;
+                --warning-bg: #fffbeb;
+                --border: #e2e8f0;
+                --card-shadow:
+                    0 4px 6px -1px rgb(15 23 42 / 0.07),
+                    0 2px 4px -2px rgb(15 23 42 / 0.07);
+                --emerald: #059669;
+                --emerald-light: #d1fae5;
+            }
+
+            * { box-sizing: border-box; }
+
+            body {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                line-height: 1.7;
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 32px 24px 60px;
+                color: var(--text);
+                background: var(--bg);
+                font-size: 15px;
+            }
+
+            .hero {
+                text-align: center;
+                margin-bottom: 28px;
+                padding-bottom: 20px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .hero .eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: var(--emerald-light);
+                color: var(--emerald);
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+                padding: 3px 12px;
+                border-radius: 999px;
+                margin-bottom: 10px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+                margin: 0 0 6px;
+                letter-spacing: -0.02em;
+            }
+
+            .hero .subtitle {
+                font-size: 1rem;
+                color: var(--text-muted);
+                margin: 0;
+            }
+
+            .toc {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin: 20px 0 24px;
+            }
+
+            .toc a {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 0.8rem;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                padding: 5px 11px;
+                border-radius: 999px;
+                text-decoration: none;
+                color: var(--text);
+                transition: all 0.1s ease;
+            }
+
+            .toc a:hover {
+                border-color: var(--emerald);
+                color: var(--emerald);
+            }
+
+            .principle-card, .section-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                box-shadow: var(--card-shadow);
+                margin-bottom: 18px;
+                overflow: hidden;
+            }
+
+            .card-head {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 14px 18px 11px;
+                background: linear-gradient(to right, #f8fafc, #ffffff);
+                border-bottom: 1px solid var(--border);
+            }
+
+            .num {
+                width: 26px;
+                height: 26px;
+                flex-shrink: 0;
+                border-radius: 8px;
+                background: var(--emerald);
+                color: white;
+                font-weight: 700;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .card-head h2 {
+                margin: 0;
+                font-size: 1.05rem;
+                font-weight: 700;
+            }
+
+            .card-body {
+                padding: 16px 18px 18px;
+            }
+
+            .card-body ul {
+                padding-left: 1.05em;
+                margin: 0.5rem 0;
+            }
+
+            .mini {
+                font-size: 0.85rem;
+                color: var(--text-muted);
+            }
+
+            .success-box {
+                background: var(--success-bg);
+                border: 1px solid #a7f3d0;
+                border-radius: 12px;
+                padding: 16px 18px;
+                margin: 18px 0;
+            }
+
+            .success-box .label {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                font-weight: 600;
+                color: #065f46;
+                font-size: 0.9rem;
+            }
+
+            .file-list {
+                background: #0f172a;
+                color: #e0e7ff;
+                padding: 12px 14px;
+                border-radius: 8px;
+                font-size: 0.82rem;
+                line-height: 1.45;
+                margin: 10px 0;
+            }
+
+            footer {
+                margin-top: 36px;
+                padding-top: 14px;
+                border-top: 1px solid var(--border);
+                font-size: 0.75rem;
+                color: var(--text-muted);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="hero">
+            <div class="eyebrow">
+                <span>ITERATION LOG</span>
+            </div>
+            <h1>CHANGES</h1>
+            <p class="subtitle">Harness.my • HTML-first agentic harness UI</p>
+        </div>
+
+        <nav class="toc" aria-label="Quick navigation">
+            <a href="#summary">Summary</a>
+            <a href="#evolution">Iteration History</a>
+            <a href="#current">Current State</a>
+            <a href="#files">Key Deliverables</a>
+            <a href="#next">Next Steps</a>
+        </nav>
+
+        <section id="summary" class="section-card">
+            <div class="card-head">
+                <div class="num">1</div>
+                <h2>Summary of Changes</h2>
+            </div>
+            <div class="card-body">
+                <p>
+                    Delivered a high-fidelity, conversation-based UI mock for Harness.my that
+                    closely follows modern Codex / Claude Code / Cursor-style interfaces while
+                    enforcing the core principle: <strong>agents respond with rich HTML cards</strong>
+                    (self-contained HTML + CSS + JS + images + sound) instead of text.
+                </p>
+                <p class="mini">
+                    The mock is now the visual and interaction specification for the real viewer
+                    (to be scaffolded in the next phase).
+                </p>
+            </div>
+        </section>
+
+        <section id="evolution" class="section-card">
+            <div class="card-head">
+                <div class="num">2</div>
+                <h2>Iteration History (User Feedback → Refinements)</h2>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>
+                        <strong>Initial direction</strong> — Agentic harness where agents default to
+                        full standalone HTML responses. Strong contract (HTML_CONTRACT.html) and
+                        supporting templates/examples created.
+                    </li>
+                    <li>
+                        <strong>Round 1</strong> — Multi-column layout + query chat box. Right-side chat
+                        column removed in subsequent pass.
+                    </li>
+                    <li>
+                        <strong>Round 2</strong> — Prompt input moved into the main column (Codex style).
+                        No dedicated chat column. Agent replies directly update HTML in main area.
+                    </li>
+                    <li>
+                        <strong>Final clarification (screenshot)</strong> — Must be <em>conversation-based</em>
+                        like Codex/Claude Code: user text prompt → agent responds with rich HTML card
+                        in the thread → user continues. The mock was completely rewritten to match the
+                        provided UI screenshot (left sidebar, main conversation with embedded rich cards,
+                        bottom composer, right environment panel).
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="current" class="section-card">
+            <div class="card-head">
+                <div class="num">3</div>
+                <h2>Current Mock Behavior (harness-ui-mock.html)</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Layout (pixel-close to screenshot):</strong></p>
+                <ul>
+                    <li>Left sidebar: New chat, Search, Automations, Plugins, Projects list, Chats, Settings.</li>
+                    <li>Main column: Conversation thread (user text + agent HTML cards) + composer at the very bottom.</li>
+                    <li>Right sidebar: Environment / Changes / Progress checklist / Sub-agents (matching the provided image structure).</li>
+                </ul>
+
+                <p><strong>Conversation model:</strong></p>
+                <ul>
+                    <li>Pure back-and-forth: user types text prompt in bottom input → agent appends a rich, self-contained “HTML Card Response” block directly in the thread.</li>
+                    <li>HTML cards are fully interactive (checkboxes, buttons, internal state, sound demo, expand-to-modal).</li>
+                    <li>Cards support the full richness requested (HTML/CSS/JS + visual elements + audio hooks).</li>
+                    <li>Expand button on any card opens a large focused view (analogous to artifact focus).</li>
+                </ul>
+
+                <p class="mini">Send any prompt in the composer to see a new HTML card appear in the conversation — exactly the desired “user prompt → agent HTML card” loop.</p>
+            </div>
+        </section>
+
+        <section id="files" class="section-card">
+            <div class="card-head">
+                <div class="num">4</div>
+                <h2>Key Files Added / Modified</h2>
+            </div>
+            <div class="card-body">
+                <div class="file-list">
+                    M  AGENTS.html<br>
+                    M  README.md<br>
+                    A  CHANGES.html (this file)<br>
+                    A  HTML_CONTRACT.html<br>
+                    A  harness-ui-mock.html<br>
+                    A  examples/interactive-plan.html<br>
+                    A  templates/base/shell.html<br>
+                    A  templates/prompts/html-mode.txt
+                </div>
+
+                <p class="mini">
+                    All new HTML artifacts follow the project’s design principles (cards, hierarchy,
+                    emerald accents, intentional whitespace, self-contained).
+                </p>
+            </div>
+        </section>
+
+        <section id="next" class="section-card">
+            <div class="card-head">
+                <div class="num">5</div>
+                <h2>Next Steps</h2>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>PR 2: Scaffold the real local viewer (<code>app/</code>) using Vite + TS + Tailwind, reproducing the exact layout and interaction model from the current mock (conversation thread + inline rich HTML cards + bottom composer + side panels).</li>
+                    <li>Wire real agent calls so typing a prompt actually receives a full HTML response and renders it as a card in the thread.</li>
+                    <li>Implement the Harness Bridge API so cards inside the conversation can request follow-ups, persist state, etc.</li>
+                    <li>Desktop shell (Electron) as a later slice.</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="success-box">
+            <div class="label">
+                <span>✅</span>
+                <span>These changes are working if</span>
+            </div>
+            <p>
+                Opening <code>harness-ui-mock.html</code> feels like using Codex/Claude Code, except every
+                agent turn is a beautiful, interactive HTML card instead of text. The conversation flows
+                naturally, the chrome matches the reference screenshot, and the HTML cards demonstrate the
+                full power (CSS, JS, interactivity, media) that the harness is built around.
+            </p>
+        </div>
+
+        <footer>
+            Part of <strong>Harness.my</strong> — HTML is the first-class response format for agents.
+            <br>
+            Documented 2026-06-14 • All artifacts are intentional, minimal, and designed.
+        </footer>
+    </body>
+</html>

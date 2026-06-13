@@ -4,6 +4,8 @@
 
 This repository contains tools, guidelines, scripts, and experiments for building better software — with a focus on design, clarity, and minimalism.
 
+**Current direction**: An evolving **agentic harness** that treats **HTML as first-class UI**. Agents respond to user queries with complete, beautifully designed, interactive `<!doctype html>` documents by default (plans, prototypes, dashboards, tools, explorers). See [HTML_CONTRACT.html](HTML_CONTRACT.html) and [AGENTS.html](AGENTS.html).
+
 ## Guidelines
 
 The canonical instructions for AI coding agents (and humans) working in this project live in:
