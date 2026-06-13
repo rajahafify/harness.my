@@ -4,7 +4,17 @@
 
 This repository contains tools, guidelines, scripts, and experiments for building better software — with a focus on design, clarity, and minimalism.
 
-**Current direction**: An evolving **agentic harness** that treats **HTML as first-class UI**. Agents respond to user queries with complete, beautifully designed, interactive `<!doctype html>` documents by default (plans, prototypes, dashboards, tools, explorers). See [HTML_CONTRACT.html](HTML_CONTRACT.html) and [AGENTS.html](AGENTS.html).
+**Current direction**: An evolving **conversation-based agentic harness** (modeled on Codex / Claude Code) that treats **HTML as first-class UI**. 
+
+The interface is a chat-style thread in the main column: the user sends text prompts, and the agent responds with rich, self-contained **HTML cards** (interactive documents containing HTML + CSS + JS, supporting images, sound, and in-card actions) rendered inline in the conversation — not plain text.
+
+The prompt input lives at the bottom of the main column. A left sidebar provides context (sessions/artifacts), and a right panel offers environment details.
+
+See:
+- [harness-ui-mock.html](harness-ui-mock.html) — high-fidelity static mock (open in browser; closely follows the reference Cursor/Claude Code screenshot).
+- [HTML_CONTRACT.html](HTML_CONTRACT.html) — the agent contract for HTML-first responses.
+- [CHANGELOG.html](CHANGELOG.html) — prepend-only, blogpost-style living log with commit IDs and GitHub links (newest updates on top).
+- [AGENTS.html](AGENTS.html) — design-oriented guidelines.
 
 ## Guidelines
 
@@ -27,7 +37,9 @@ git clone https://github.com/rajahafify/harness.my.git
 cd harness.my
 ```
 
-More structure and content will be added as the harness evolves.
+Open `harness-ui-mock.html` in a browser to explore the current target UI. It is fully interactive: send messages in the composer at the bottom of the main column to see new HTML cards appear in the conversation thread.
+
+The current prototype and direction are captured in the artifacts listed above. More (the real interactive viewer, etc.) will be added as the harness evolves.
 
 ## Philosophy
 
