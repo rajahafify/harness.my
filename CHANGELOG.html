@@ -146,6 +146,107 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 18:00) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 18:00</div>
+                <h2 class="entry-title">Next development phases defined; UI mock as living spec</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    With the high-fidelity <code>harness-ui-mock.html</code> now closely matching the reference
+                    Cursor/Claude Code screenshot and embodying the conversation-based model (user text prompts
+                    in main column → agent replies with rich interactive HTML cards in the thread), we have a
+                    solid, intentional visual and interaction specification.
+                </p>
+                <p>
+                    The README and this CHANGELOG have been updated to document the current state, including
+                    full commit history with GitHub links and timestamps on all entries. The project remains
+                    committed to prepend-only, blogpost-style documentation for the changelog.
+                </p>
+
+                <p><strong>Proposed Next Phases</strong> (goal-driven, aligned with AGENTS.html principles of
+                simplicity, surgical changes, and HTML as first-class):</p>
+
+                <ol>
+                    <li>
+                        <strong>Real Interactive Viewer (MVP)</strong><br>
+                        Scaffold a dynamic web app (minimal Vite + TS + Tailwind or even enhanced static site
+                        to stay lightweight) that turns the static mock into a fully functional chat.
+                        <ul>
+                            <li>Dynamic conversation thread: append user messages and agent "HTML card" responses.</li>
+                            <li>Card rendering: support full/embedded HTML (initially via srcdoc iframes or sanitized DOM injection for isolation).</li>
+                            <li>Core interactions: send prompt, expand cards, basic sidebar navigation for sessions/artifacts.</li>
+                        </ul>
+                        <em>Success criteria:</em> User can have a multi-turn conversation where "agent" produces
+                        different rich HTML cards based on prompts (start with template library + simple generation).
+                    </li>
+                    <li>
+                        <strong>Real Agent Integration</strong><br>
+                        Wire the prompt composer to an actual LLM (leveraging existing Grok auth/BYOK patterns or
+                        a thin proxy) using the <code>HTML_CONTRACT.html</code> as system prompt + context (previous
+                        cards, workspace summaries).
+                        <ul>
+                            <li>Parse agent output: ensure/strip to pure &lt;!doctype html&gt; and render as card.</li>
+                            <li>Handle errors gracefully (e.g. non-HTML fallback card).</li>
+                        </ul>
+                        <em>Success criteria:</em> Typing a real prompt produces a valid, beautiful HTML card from a
+                        live agent that appears in the thread.
+                    </li>
+                    <li>
+                        <strong>Sessions, Persistence &amp; History</strong><br>
+                        Add multi-session support in the left sidebar.
+                        <ul>
+                            <li>Persist conversations (localStorage first, then file-based or simple backend).</li>
+                            <li>Ability to switch sessions, fork conversations, export a thread as a single rich HTML page.</li>
+                            <li>Thread metadata: timestamps, agent used, etc.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Harness Bridge for Card Interactivity</strong><br>
+                        Implement the <code>window.harness</code> API (requestFollowUp, saveState, etc.) so that
+                        elements inside the rendered HTML cards can meaningfully interact with the harness (e.g.
+                        "Revise this plan", "Open file", persist card-specific state).
+                        <ul>
+                            <li>Secure injection only for cards rendered by the harness.</li>
+                            <li>Progressive enhancement: cards still work standalone.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Desktop Experience &amp; Auth</strong><br>
+                        Wrap the viewer in Electron (or evaluate Tauri for lighter weight) to match the "desktop
+                        agentic tool" feel from the original vision.
+                        <ul>
+                            <li>Native menus, window management, deep workspace integration.</li>
+                            <li>Full BYOK + login flows (browser OAuth windows) for providers.</li>
+                            <li>Optional local server component for advanced features (live reload, file mgmt).</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Polish, Dogfooding &amp; Expansion</strong><br>
+                        Use the harness on itself to generate more example HTML cards, improve the contract,
+                        add rich patterns (data viz, code explorers, prototypes), accessibility, performance.
+                        <ul>
+                            <li>Create a gallery of high-quality committed HTML response examples.</li>
+                            <li>Iterate based on real usage (e.g. this very project).</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p>
+                    These phases are designed to be incremental and verifiable. Each can produce working,
+                    intentional artifacts. The static mock remains the reference for visual and interaction
+                    fidelity until the real app surpasses it.
+                </p>
+
+                <div class="meta">
+                    This entry itself will be committed as part of documenting the planning step.
+                </div>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 17:45) -->
         <article class="entry">
             <div class="entry-header">
