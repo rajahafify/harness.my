@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CHANGELOG • Harness.my</title>
+        <style>
+            :root {
+                --bg: #f8fafc;
+                --surface: #ffffff;
+                --text: #0f172a;
+                --text-muted: #475569;
+                --accent: #6366f1;
+                --accent-light: #e0e7ff;
+                --success: #10b981;
+                --success-bg: #ecfdf5;
+                --border: #e2e8f0;
+                --card-shadow:
+                    0 4px 6px -1px rgb(15 23 42 / 0.07),
+                    0 2px 4px -2px rgb(15 23 42 / 0.07);
+                --emerald: #059669;
+            }
+
+            * { box-sizing: border-box; }
+
+            body {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                line-height: 1.75;
+                max-width: 720px;
+                margin: 0 auto;
+                padding: 40px 24px 80px;
+                color: var(--text);
+                background: var(--bg);
+                font-size: 15.5px;
+            }
+
+            .header {
+                margin-bottom: 32px;
+                padding-bottom: 20px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+                margin: 0 0 4px;
+                letter-spacing: -0.025em;
+            }
+
+            .header .tag {
+                font-size: 0.75rem;
+                font-weight: 700;
+                letter-spacing: 0.6px;
+                color: var(--emerald);
+                background: var(--emerald-light);
+                padding: 2px 8px;
+                border-radius: 999px;
+                display: inline-block;
+            }
+
+            .intro {
+                color: var(--text-muted);
+                max-width: 58ch;
+            }
+
+            .entry {
+                margin-bottom: 48px;
+            }
+
+            .entry:last-child {
+                margin-bottom: 0;
+            }
+
+            .entry-header {
+                margin-bottom: 12px;
+            }
+
+            .entry-date {
+                font-size: 0.8rem;
+                font-weight: 600;
+                color: var(--emerald);
+                letter-spacing: 0.3px;
+            }
+
+            .entry-title {
+                font-size: 1.2rem;
+                font-weight: 700;
+                margin: 4px 0 0;
+                line-height: 1.3;
+            }
+
+            .entry-body {
+                color: #1e2937;
+            }
+
+            .entry-body p {
+                margin: 0.9rem 0;
+            }
+
+            .entry-body ul {
+                padding-left: 1.1em;
+                margin: 0.8rem 0;
+            }
+
+            .entry-body li {
+                margin: 0.35rem 0;
+            }
+
+            .meta {
+                font-size: 0.8rem;
+                color: var(--text-muted);
+                margin-top: 12px;
+            }
+
+            .divider {
+                height: 1px;
+                background: var(--border);
+                margin: 48px 0;
+            }
+
+            .note {
+                background: #fefce8;
+                border-left: 4px solid #ca8a04;
+                padding: 10px 14px;
+                font-size: 0.9rem;
+                color: #713f12;
+            }
+
+            footer {
+                margin-top: 60px;
+                padding-top: 18px;
+                border-top: 1px solid var(--border);
+                font-size: 0.75rem;
+                color: var(--text-muted);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="tag">LIVING LOG</div>
+            <h1>CHANGELOG</h1>
+            <p class="intro">
+                Prepend-only. Newest updates at the top. Written in blogpost style
+                so the story of the harness reads naturally from recent to past.
+            </p>
+        </div>
+
+        <!-- NEWEST ENTRY FIRST -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14</div>
+                <h2 class="entry-title">UI mock now matches the reference screenshot + fully conversation-based model</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    After a few rounds of feedback, the <code>harness-ui-mock.html</code> was
+                    rewritten to follow the provided Cursor/Claude Code-style screenshot as
+                    closely as possible while staying true to the core idea of Harness.my.
+                </p>
+                <p>
+                    The interface is now a proper conversation thread:
+                </p>
+                <ul>
+                    <li>User types a text prompt in the composer at the bottom of the main column.</li>
+                    <li>The agent replies in the thread with a rich, self-contained <strong>HTML card</strong> — not plain text.</li>
+                    <li>Cards are interactive, can contain CSS, JS, images, and sound hooks, and support an "Expand" action for a larger focused view.</li>
+                </ul>
+                <p>
+                    Layout closely mirrors the reference image:
+                </p>
+                <ul>
+                    <li>Left sidebar with New chat, Search, Automations, Projects, and Chats list (selected item highlighted).</li>
+                    <li>Main area shows the conversation with structured text, inline HTML cards (styled similarly to the "Edited files" blocks in the screenshot), and small note callouts.</li>
+                    <li>Bottom composer is nearly identical in style and placement, with a + button, input, model selector, and Send.</li>
+                    <li>Right "Environment" panel includes Changes, Progress checklist, and Sub-agents (adapted to our HTML-card context).</li>
+                </ul>
+                <p>
+                    Supporting updates were made to <code>HTML_CONTRACT.html</code> so the agent
+                    contract now explicitly describes the conversation + inline HTML card model.
+                    The earlier summary document was replaced by this proper prepend-only
+                    CHANGELOG.html.
+                </p>
+                <div class="meta">
+                    Files touched: harness-ui-mock.html (major), HTML_CONTRACT.html, 
+                    examples/, templates/, AGENTS.html, README.md, and this changelog.
+                </div>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <!-- PREVIOUS ENTRY -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 (earlier)</div>
+                <h2 class="entry-title">Foundation work: HTML-first contract and initial mock iterations</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    Established the core philosophy that agents in Harness.my default to
+                    responding with complete, standalone, beautifully designed HTML documents.
+                </p>
+                <p>
+                    Created the canonical <code>HTML_CONTRACT.html</code> (a self-demonstrating
+                    spec) and supporting templates + an early interactive plan example.
+                    Initial mock versions explored different layouts (multi-column, prompt in
+                    main column) before landing on the conversation-thread model with HTML
+                    cards as the agent's voice.
+                </p>
+                <p>
+                    All artifacts follow the project's existing guidelines: intentional design,
+                    minimum code that solves the problem, and HTML preferred for important
+                    documentation and deliverables.
+                </p>
+            </div>
+        </article>
+
+        <footer>
+            This file is prepend-only. New entries are added at the top.<br>
+            Part of <strong>Harness.my</strong> — where agents speak in rich HTML by default.
+        </footer>
+    </body>
+</html>
