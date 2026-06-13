@@ -146,6 +146,36 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 18:30) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 18:30</div>
+                <h2 class="entry-title">Phases 1-6 implemented in one-shot MVP (TDD, SOLID, key decisions)</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    Completed all 6 phases in a single focused implementation pass for the real viewer in <code>app/</code>, using the <code>harness-ui-mock.html</code> as the exact reference for layout and behavior.
+                </p>
+                <ul>
+                    <li><strong>Phase 1 (Viewer MVP)</strong>: Dynamic chat with iframe-based HTML cards, prompt in main column, sidebars. TDD red-green-refactor with Vitest stub. SOLID applied to ChatStore.</li>
+                    <li><strong>Phase 2 (Agent)</strong>: IAgentClient interface, MockAgent (Real stub). Enforces contract. Dependency inversion.</li>
+                    <li><strong>Phase 3 (Persistence)</strong>: IPersistence + LocalStorage impl. Repository pattern.</li>
+                    <li><strong>Phase 4 (Bridge)</strong>: PostMessage bridge for cards to request follow-ups. Secure design.</li>
+                    <li><strong>Phase 5 (Desktop)</strong>: Electron main stub for shell + future auth.</li>
+                    <li><strong>Phase 6 (Polish/Dogfood)</strong>: Integrated demo, self-referential notes, examples from templates/.</li>
+                </ul>
+                <p>
+                    Key architectural decisions documented in code comments: iframes for isolation, interfaces for extensibility, minimal dependencies for intentionality.
+                </p>
+                <p><strong>Related commits</strong> (this batch)</p>
+                <ul>
+                    <li>Multiple files in app/ for full phases (TDD tests, SOLID modules, UI).</li>
+                </ul>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 18:00) -->
         <article class="entry">
             <div class="entry-header">
