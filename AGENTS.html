@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AGENTS • Design-Oriented Guidelines</title>
+        <style>
+            :root {
+                --bg: #f8fafc;
+                --surface: #ffffff;
+                --text: #0f172a;
+                --text-muted: #475569;
+                --accent: #6366f1;
+                --accent-light: #e0e7ff;
+                --success: #10b981;
+                --success-bg: #ecfdf5;
+                --warning: #f59e0b;
+                --warning-bg: #fffbeb;
+                --border: #e2e8f0;
+                --card-shadow:
+                    0 4px 6px -1px rgb(15 23 42 / 0.07),
+                    0 2px 4px -2px rgb(15 23 42 / 0.07);
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    Roboto,
+                    "Helvetica Neue",
+                    Arial,
+                    sans-serif;
+                line-height: 1.7;
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 32px 24px 60px;
+                color: var(--text);
+                background: var(--bg);
+                font-size: 15.5px;
+            }
+
+            .hero {
+                text-align: center;
+                margin-bottom: 32px;
+                padding-bottom: 24px;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .hero .eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: var(--accent-light);
+                color: var(--accent);
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+                padding: 4px 14px;
+                border-radius: 999px;
+                margin-bottom: 12px;
+            }
+
+            .hero h1 {
+                font-size: 2.25rem;
+                margin: 0 0 8px;
+                color: #0f172a;
+                letter-spacing: -0.02em;
+            }
+
+            .hero .subtitle {
+                font-size: 1.05rem;
+                color: var(--text-muted);
+                margin: 0;
+            }
+
+            .preference-banner {
+                display: flex;
+                align-items: flex-start;
+                gap: 16px;
+                background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+                color: white;
+                padding: 20px 24px;
+                border-radius: 14px;
+                margin: 24px 0;
+                box-shadow: 0 10px 15px -3px rgb(99 102 241 / 0.25);
+            }
+
+            .preference-banner .icon {
+                font-size: 28px;
+                line-height: 1;
+                flex-shrink: 0;
+                margin-top: 2px;
+            }
+
+            .preference-banner .content {
+                flex: 1;
+            }
+
+            .preference-banner .content strong {
+                color: #fff;
+                font-size: 1.02rem;
+            }
+
+            .preference-banner .content p {
+                margin: 6px 0 0;
+                opacity: 0.95;
+                font-size: 0.95rem;
+            }
+
+            .badge {
+                display: inline-block;
+                font-size: 11px;
+                font-weight: 700;
+                padding: 2px 9px;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.25);
+                margin-left: 8px;
+                vertical-align: middle;
+            }
+
+            .intro {
+                font-size: 1rem;
+                color: var(--text-muted);
+                max-width: 68ch;
+            }
+
+            .toc {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin: 28px 0 8px;
+            }
+
+            .toc a {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 0.875rem;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                padding: 6px 14px;
+                border-radius: 999px;
+                text-decoration: none;
+                color: var(--text);
+                transition: all 0.1s ease;
+                box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+            }
+
+            .toc a:hover {
+                border-color: var(--accent);
+                color: var(--accent);
+                transform: translateY(-1px);
+            }
+
+            .warning {
+                background: var(--warning-bg);
+                border: 1px solid #fde68c;
+                border-left: 5px solid var(--warning);
+                padding: 14px 18px;
+                border-radius: 10px;
+                margin: 20px 0;
+                font-size: 0.95rem;
+            }
+
+            .warning strong {
+                color: #92400e;
+            }
+
+            .principle-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                box-shadow: var(--card-shadow);
+                margin-bottom: 22px;
+                overflow: hidden;
+                transition:
+                    transform 0.1s ease,
+                    box-shadow 0.1s ease;
+            }
+
+            .principle-card:hover {
+                box-shadow:
+                    0 10px 15px -3px rgb(15 23 42 / 0.1),
+                    0 4px 6px -4px rgb(15 23 42 / 0.1);
+            }
+
+            .card-head {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 18px 24px 14px;
+                background: linear-gradient(to right, #f8fafc, #ffffff);
+                border-bottom: 1px solid var(--border);
+            }
+
+            .num {
+                width: 32px;
+                height: 32px;
+                flex-shrink: 0;
+                border-radius: 10px;
+                background: var(--accent);
+                color: white;
+                font-weight: 800;
+                font-size: 0.95rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 4px rgb(99 102 241 / 0.3);
+            }
+
+            .icon {
+                font-size: 1.35rem;
+                line-height: 1;
+                margin-right: 2px;
+            }
+
+            .card-head h2 {
+                margin: 0;
+                font-size: 1.15rem;
+                color: #0f172a;
+                font-weight: 700;
+                letter-spacing: -0.01em;
+            }
+
+            .card-body {
+                padding: 22px 24px 26px;
+            }
+
+            .card-body p {
+                margin: 0.65rem 0;
+            }
+
+            .card-body ul {
+                padding-left: 1.1em;
+                margin: 0.7rem 0;
+            }
+
+            .card-body li {
+                margin: 0.4rem 0;
+                position: relative;
+            }
+
+            .card-body strong {
+                color: #0f172a;
+            }
+
+            .mini {
+                font-size: 0.9rem;
+                color: var(--text-muted);
+            }
+
+            pre {
+                background: #0f172a;
+                color: #e0e7ff;
+                padding: 16px 18px;
+                border-radius: 10px;
+                overflow-x: auto;
+                font-size: 0.88rem;
+                line-height: 1.55;
+                margin: 14px 0;
+                box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.3);
+            }
+
+            code {
+                font-family:
+                    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+                    "Liberation Mono", "Courier New", monospace;
+            }
+
+            .success-box {
+                background: var(--success-bg);
+                border: 1px solid #a7f3d0;
+                border-radius: 14px;
+                padding: 22px 24px;
+                margin: 28px 0 12px;
+                box-shadow: 0 4px 6px -1px rgb(16 185 129 / 0.1);
+            }
+
+            .success-box .label {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 700;
+                color: #065f46;
+                font-size: 0.95rem;
+                margin-bottom: 8px;
+            }
+
+            .success-box p {
+                margin: 0;
+                color: #064e3b;
+            }
+
+            .design-callout {
+                background: #f0f9ff;
+                border: 1px solid #bae6fd;
+                padding: 18px 20px;
+                border-radius: 12px;
+                margin: 18px 0;
+            }
+
+            footer {
+                margin-top: 48px;
+                padding-top: 18px;
+                border-top: 1px solid var(--border);
+                font-size: 0.8rem;
+                color: var(--text-muted);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .footer-note {
+                background: var(--surface);
+                padding: 2px 8px;
+                border-radius: 6px;
+                border: 1px solid var(--border);
+            }
+
+            @media (max-width: 640px) {
+                body {
+                    padding: 24px 16px 40px;
+                }
+                .hero h1 {
+                    font-size: 1.85rem;
+                }
+                .card-head {
+                    padding: 16px 18px 12px;
+                }
+                .card-body {
+                    padding: 18px 18px 22px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Hero Header -->
+        <div class="hero">
+            <div class="eyebrow">
+                <span>AI AGENT INSTRUCTIONS</span>
+                <span class="badge">HTML EDITION</span>
+            </div>
+            <h1>AGENTS</h1>
+            <p class="subtitle">Design-Oriented Guidelines for Coding Agents</p>
+        </div>
+
+        <!-- Strong HTML + Design Preference -->
+        <div class="preference-banner">
+            <div class="icon">🎨</div>
+            <div class="content">
+                <strong
+                    >This project prefers beautifully designed HTML over
+                    Markdown.</strong
+                >
+                <p>
+                    All documentation, guidelines, specs, internal tools, and
+                    instruction files should feature thoughtful design elements,
+                    strong visual hierarchy, modern UI patterns, icons, cards,
+                    color accents, and polished presentation — not plain
+                    functional markup.
+                </p>
+            </div>
+        </div>
+
+        <p class="intro">
+            Behavioral guidelines to reduce common LLM coding mistakes while
+            producing work that feels intentional and well-crafted. These
+            instructions apply to all AI coding assistants (Grok, Claude,
+            Cursor, and similar) working in this repository.
+        </p>
+
+        <!-- Quick TOC -->
+        <nav class="toc" aria-label="Quick navigation">
+            <a href="#think">🧠 Think Before Coding</a>
+            <a href="#simplicity">✨ Simplicity First</a>
+            <a href="#surgical">✂️ Surgical Changes</a>
+            <a href="#goal">🎯 Goal-Driven Execution</a>
+            <a href="#design">🎨 Design-Conscious HTML</a>
+        </nav>
+
+        <!-- Tradeoff -->
+        <div class="warning">
+            <strong>Tradeoff:</strong> These guidelines bias toward caution and
+            quality over speed. For trivial tasks, use judgment.
+        </div>
+
+        <!-- 1 -->
+        <section id="think" class="principle-card">
+            <div class="card-head">
+                <div class="num">1</div>
+                <span class="icon">🧠</span>
+                <h2>Think Before Coding</h2>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong
+                        >Don't assume. Don't hide confusion. Surface
+                        tradeoffs.</strong
+                    >
+                </p>
+                <p>Before implementing:</p>
+                <ul>
+                    <li>
+                        State your assumptions explicitly. If uncertain, ask.
+                    </li>
+                    <li>
+                        If multiple interpretations exist, present them — don't
+                        pick silently.
+                    </li>
+                    <li>
+                        If a simpler approach exists, say so. Push back when
+                        warranted.
+                    </li>
+                    <li>
+                        If something is unclear, stop. Name what's confusing.
+                        Ask.
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2 -->
+        <section id="simplicity" class="principle-card">
+            <div class="card-head">
+                <div class="num">2</div>
+                <span class="icon">✨</span>
+                <h2>Simplicity First</h2>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong
+                        >Minimum code that solves the problem. Nothing
+                        speculative.</strong
+                    >
+                </p>
+                <ul>
+                    <li>No features beyond what was asked.</li>
+                    <li>No abstractions for single-use code.</li>
+                    <li>
+                        No "flexibility" or "configurability" that wasn't
+                        requested.
+                    </li>
+                    <li>No error handling for impossible scenarios.</li>
+                    <li>
+                        If you write 200 lines and it could be 50, rewrite it.
+                    </li>
+                </ul>
+                <p class="mini">
+                    Ask yourself: "Would a senior engineer say this is
+                    overcomplicated?" If yes, simplify.
+                </p>
+            </div>
+        </section>
+
+        <!-- 3 -->
+        <section id="surgical" class="principle-card">
+            <div class="card-head">
+                <div class="num">3</div>
+                <span class="icon">✂️</span>
+                <h2>Surgical Changes</h2>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong
+                        >Touch only what you must. Clean up only your own
+                        mess.</strong
+                    >
+                </p>
+
+                <p>When editing existing code:</p>
+                <ul>
+                    <li>
+                        Don't "improve" adjacent code, comments, or formatting.
+                    </li>
+                    <li>Don't refactor things that aren't broken.</li>
+                    <li>
+                        Match existing style, even if you'd do it differently.
+                    </li>
+                    <li>
+                        If you notice unrelated dead code, mention it — don't
+                        delete it.
+                    </li>
+                </ul>
+
+                <p>When your changes create orphans:</p>
+                <ul>
+                    <li>
+                        Remove imports/variables/functions that
+                        <strong>your</strong> changes made unused.
+                    </li>
+                    <li>Don't remove pre-existing dead code unless asked.</li>
+                </ul>
+
+                <p>
+                    <strong>The test:</strong> Every changed line should trace
+                    directly to the user's request.
+                </p>
+            </div>
+        </section>
+
+        <!-- 4 -->
+        <section id="goal" class="principle-card">
+            <div class="card-head">
+                <div class="num">4</div>
+                <span class="icon">🎯</span>
+                <h2>Goal-Driven Execution</h2>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong
+                        >Define success criteria. Loop until verified.</strong
+                    >
+                </p>
+
+                <p>Transform tasks into verifiable goals:</p>
+                <ul>
+                    <li>
+                        "Add validation" → "Write tests for invalid inputs, then
+                        make them pass"
+                    </li>
+                    <li>
+                        "Fix the bug" → "Write a test that reproduces it, then
+                        make it pass"
+                    </li>
+                    <li>"Refactor X" → "Ensure tests pass before and after"</li>
+                </ul>
+
+                <p>For multi-step tasks, state a brief plan:</p>
+                <pre><code>1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]</code></pre>
+
+                <p class="mini">
+                    Strong success criteria let you loop independently. Weak
+                    criteria ("make it work") require constant clarification.
+                </p>
+            </div>
+        </section>
+
+        <!-- 5 — NEW: Design emphasis -->
+        <section id="design" class="principle-card">
+            <div class="card-head">
+                <div class="num">5</div>
+                <span class="icon">🎨</span>
+                <h2>Design-Conscious HTML</h2>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong
+                        >HTML deliverables should be visually crafted and
+                        delightful — not merely functional.</strong
+                    >
+                </p>
+
+                <div class="design-callout">
+                    <p style="margin: 0; font-weight: 600; color: #0369a1">
+                        This project values design elements in HTML.
+                    </p>
+                </div>
+
+                <p>
+                    When creating or editing any HTML (documentation, guidelines
+                    like this file, internal tools, specs, UIs, reports, landing
+                    pages, etc.):
+                </p>
+                <ul>
+                    <li>
+                        Apply deliberate visual design: strong hierarchy,
+                        generous and consistent whitespace, clear typographic
+                        rhythm, and balanced layout.
+                    </li>
+                    <li>
+                        Use modern UI patterns and design elements: cards,
+                        colored callouts, iconography, subtle shadows, badges,
+                        dividers, accent colors, grids/flex, hover states, and
+                        micro-interactions where they improve the experience.
+                    </li>
+                    <li>
+                        Make content scannable and pleasant to read. Use color,
+                        spacing, and visual weight to guide the eye and
+                        highlight what matters.
+                    </li>
+                    <li>
+                        Plain unstyled markup is only the starting point.
+                        Elevate it with design intent so the result feels
+                        professional, intentional, and high-quality.
+                    </li>
+                    <li>
+                        Design is part of clarity. Treat the reader's visual and
+                        emotional experience as a core requirement of the
+                        deliverable.
+                    </li>
+                </ul>
+
+                <p class="mini">
+                    <strong>Examples of good design elements:</strong> nice
+                    headers with accent bars, numbered cards, icon + text
+                    combinations, success/warning banners, well-styled code
+                    blocks, consistent button-like pills, and breathing room
+                    between sections.
+                </p>
+            </div>
+        </section>
+
+        <!-- Success Metrics -->
+        <div class="success-box">
+            <div class="label">
+                <span>✅</span>
+                <span>These guidelines are working if</span>
+            </div>
+            <p>
+                Fewer unnecessary changes in diffs, fewer rewrites due to
+                overcomplication, clarifying questions come before
+                implementation rather than after mistakes,
+                <strong
+                    >and HTML artifacts demonstrate care, visual polish, and
+                    thoughtful design elements.</strong
+                >
+            </p>
+        </div>
+
+        <footer>
+            <div>
+                This file (AGENTS.html) is the canonical version and supersedes
+                any previous AGENTS.md / CLAUDE.md.
+            </div>
+            <div class="footer-note">
+                Edit directly • HTML is preferred • Design matters
+            </div>
+        </footer>
+    </body>
+</html>
