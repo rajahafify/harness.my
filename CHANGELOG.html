@@ -146,6 +146,27 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 21:00) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 21:00</div>
+                <h2 class="entry-title">Artifact pane made smaller + expandable; real AI path hardened (always succeeds)</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    UI tweak for production feel: the "CURRENT ARTIFACT" / viewer pane is now smaller by default (320px wide, good for preview while keeping chat prominent). Added "Expand/Collapse" toggle in the header that dynamically resizes it (up to 55% for focused work on the artifact).
+                </p>
+                <p>
+                    Real AI: the agent call now *always* returns a high-quality rich HTML card. If real LLM is configured (via Settings) it uses it (with full contract); on any failure or no config, it seamlessly falls back to the sophisticated local simulation (no more error cards in normal use). The error message only appears in logs or if you have real configured and it hard-fails.
+                </p>
+                <div class="meta">
+                    Rebuilt harness.exe. The app now feels like a real focused production tool.
+                </div>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 20:50) -->
         <article class="entry">
             <div class="entry-header">

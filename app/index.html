@@ -235,9 +235,9 @@
             </div>
         </div>
 
-        <div class="flex-1 flex overflow-hidden">
-            <!-- Chat thread -->
-            <div class="w-2/5 border-r flex flex-col bg-white">
+        <div id="main-split" class="flex-1 flex overflow-hidden">
+            <!-- Chat thread (larger by default) -->
+            <div class="flex-1 border-r flex flex-col bg-white">
                 <div class="flex-1 p-4 overflow-auto chat-thread" id="chat-thread"></div>
 
                 <!-- Composer at bottom of main column -->
@@ -258,19 +258,22 @@
                 </div>
             </div>
 
-            <!-- Current artifact viewer (large preview) -->
-            <div class="flex-1 flex flex-col bg-[#f8fafc]">
-                <div class="h-9 border-b bg-white px-3 flex items-center text-xs font-medium text-[#64748b]">
-                    CURRENT ARTIFACT
-                    <span id="artifact-title" class="ml-2 text-emerald-700 font-semibold"></span>
+            <!-- Current artifact viewer (small by default, expandable) -->
+            <div id="artifact-pane" class="flex-none flex flex-col bg-[#f8fafc]" style="width: 320px;">
+                <div class="h-9 border-b bg-white px-3 flex items-center text-xs font-medium text-[#64748b] justify-between">
+                    <div>
+                        CURRENT ARTIFACT
+                        <span id="artifact-title" class="ml-2 text-emerald-700 font-semibold text-[11px]"></span>
+                    </div>
+                    <button onclick="toggleArtifactSize()" class="text-[10px] px-1.5 py-0.5 border rounded hover:bg-gray-100" id="artifact-toggle">Expand</button>
                 </div>
-                <div class="flex-1 p-3 overflow-auto">
-                    <iframe id="artifact-viewer" class="w-full h-full border border-gray-200 rounded-lg bg-white shadow-sm" sandbox="allow-scripts allow-same-origin"></iframe>
+                <div class="flex-1 p-2 overflow-auto">
+                    <iframe id="artifact-viewer" class="w-full h-full border border-gray-200 rounded bg-white shadow-sm" sandbox="allow-scripts allow-same-origin"></iframe>
                 </div>
-                <div class="p-2 border-t bg-white text-[10px] flex gap-2 text-[#64748b]">
-                    <button onclick="copyCurrentArtifact()" class="hover:text-emerald-700">Copy HTML</button>
-                    <button onclick="saveCurrentArtifact()" class="hover:text-emerald-700">Save as .html</button>
-                    <button onclick="requestArtifactFollowUp()" class="hover:text-emerald-700">Iterate on this</button>
+                <div class="p-1.5 border-t bg-white text-[9px] flex gap-1 text-[#64748b] flex-wrap">
+                    <button onclick="copyCurrentArtifact()" class="hover:text-emerald-700">Copy</button>
+                    <button onclick="saveCurrentArtifact()" class="hover:text-emerald-700">Save .html</button>
+                    <button onclick="requestArtifactFollowUp()" class="hover:text-emerald-700">Iterate</button>
                 </div>
             </div>
         </div>
@@ -285,6 +288,7 @@
             artifacts: []
         };
         let currentArtifactIndex = -1;
+        let artifactExpanded = false;
 
         const chatThread = document.getElementById('chat-thread');
         const artifactViewer = document.getElementById('artifact-viewer');
@@ -292,6 +296,8 @@
         const promptInput = document.getElementById('prompt-input');
         const sessionsList = document.getElementById('sessions-list');
         const artifactsList = document.getElementById('artifacts-list');
+        const artifactPane = document.getElementById('artifact-pane');
+        const artifactToggle = document.getElementById('artifact-toggle');
 
         function saveCurrentSession() {
             // In production, this would use Electron's userData + better storage
@@ -495,6 +501,19 @@
             a.download = (art.title || 'artifact').replace(/[^a-z0-9]/gi, '_') + '.html';
             a.click();
             URL.revokeObjectURL(url);
+        }
+
+        function toggleArtifactSize() {
+            artifactExpanded = !artifactExpanded;
+            if (artifactExpanded) {
+                artifactPane.style.width = '55%';
+                artifactPane.style.flex = 'none';
+                if (artifactToggle) artifactToggle.textContent = 'Collapse';
+            } else {
+                artifactPane.style.width = '320px';
+                artifactPane.style.flex = 'none';
+                if (artifactToggle) artifactToggle.textContent = 'Expand';
+            }
         }
 
         // Keyboard support
