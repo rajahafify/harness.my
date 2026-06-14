@@ -503,10 +503,45 @@
             }
         });
 
-        // Boot
+        // Boot - Production onboarding with intentional examples (not fake "test" chats)
         loadSession();
+
+        // On first run with no real work yet, seed one high-quality example artifact.
+        // This demonstrates the core value (rich, self-contained interactive HTML as the agent's response)
+        // without polluting the experience. It uses the project's own design language and contract.
+        // Users can immediately see "this is what a real response looks like".
+        // Examples are clearly in the Artifacts list and easy to start fresh from.
+        if (currentSession.artifacts.length === 0 && !localStorage.getItem('harness-has-seen-examples')) {
+            // Seed one excellent starter artifact (inspired by the project's own planning work)
+            const exampleHtml = `<!doctype html><html><head><meta charset="UTF-8"><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');body{font-family:'Inter',system-ui,sans-serif;margin:0;padding:0;background:#f8fafc;color:#0f172a;font-size:13.5px;line-height:1.6}.card{max-width:860px;margin:0 auto;background:white;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 4px 6px -1px rgb(15 23 42 / 0.07);overflow:hidden}.header{padding:14px 18px;background:linear-gradient(to right,#f8fafc,#ffffff);border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:10px}.header .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;background:#d1fae5;color:#059669}.content{padding:18px 20px}.section{margin-bottom:14px}.section h4{margin:0 0 6px;font-size:0.95rem;color:#059669}button,.btn{font-size:12px;padding:6px 12px;border-radius:6px;border:1px solid #e2e8f0;background:white;cursor:pointer}button:hover{background:#f1f5f9}.progress{height:6px;background:#e2e8f0;border-radius:3px;margin:6px 0}.progress > div{height:6px;background:#10b981;border-radius:3px}.mini{font-size:0.8rem;color:#64748b}</style></head><body><div class="card"><div class="header"><span style="font-weight:700">Example: Planning the phases</span><span class="badge">STARTER ARTIFACT</span></div><div class="content"><div class="section"><h4>Interactive Plan — Next phases for the harness</h4><div class="mini">High-quality example of what a real agent HTML response looks like (self-contained, interactive, follows the contract)</div></div><div class="section"><div style="display:flex;gap:12px;align-items:center;margin-bottom:8px"><div style="flex:1"><div class="mini">OVERALL PROGRESS</div><div style="font-size:1.6rem;font-weight:700">58%</div></div><div class="progress" style="flex:2"><div style="width:58%"></div></div></div></div><div class="section"><h4>Tasks</h4><div style="display:flex;flex-direction:column;gap:4px;font-size:0.9rem"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" checked> Production viewer with clean split (chat + artifact)</label><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" checked> Rich contract-aligned HTML cards</label><label style="display:flex;align-items:center;gap:8px"><input type="checkbox"> Real persistence + artifacts list</label></div></div><div class="section"><button onclick="this.innerHTML='Marked done ✓'; this.disabled=true;">Mark done</button> <button onclick="parent.postMessage({type:'harness-request', action:'requestFollowUp', payload:'Add a visual roadmap and two more phases'}, '*')">Ask agent to expand this</button></div><div class="mini" style="margin-top:12px">This is what a real agent response feels like in Harness. Start typing your own prompt below to create your first real artifact.</div></div></div></body></html>`;
+
+            currentSession.artifacts.push({
+                title: 'Example: Planning the phases',
+                html: exampleHtml,
+                timestamp: new Date().toISOString()
+            });
+
+            currentSession.messages.push({
+                type: 'user',
+                content: 'Help me plan the next phases for a production agentic harness',
+                timestamp: 'example'
+            });
+            currentSession.messages.push({
+                type: 'agent',
+                artifactIndex: 0,
+                artifactTitle: 'Example: Planning the phases',
+                timestamp: 'example'
+            });
+
+            localStorage.setItem('harness-has-seen-examples', 'true');
+            saveCurrentSession();
+            renderSidebar();
+            renderThread();
+            showArtifact(0);
+        }
+
         if (currentSession.artifacts.length === 0) {
-            // Nice first-run experience
+            // Nice first-run experience for subsequent new sessions
             setTimeout(() => {
                 promptInput.placeholder = 'Try: "Build a production-grade session manager UI"';
             }, 800);
@@ -517,7 +552,7 @@
             requestFollowUp: (p) => { promptInput.value = p; sendPrompt(); }
         };
 
-        console.log('%c[Harness] Production app ready. Clean, intentional, HTML-first agentic experience.', 'color:#059669');
+        console.log('%c[Harness] Production app ready. Clean, intentional, HTML-first agentic experience. High-quality example artifact shown on first run to demonstrate the power without feeling like a toy demo.', 'color:#059669');
     </script>
 </body>
 </html>

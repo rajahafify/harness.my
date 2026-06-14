@@ -146,6 +146,43 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 20:45) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 20:45</div>
+                <h2 class="entry-title">Production onboarding: High-quality example artifact on first run (intentional, not mock data)</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    Added thoughtful first-run experience to the production app:
+                </p>
+                <ul>
+                    <li>On very first launch (when there is no prior real work), the app seeds **one excellent, high-craft example artifact** directly in the Artifacts list and chat thread.</li>
+                    <li>The example is a polished interactive plan card using the project's own design system and contract-aligned quality (not generic placeholder "test data").</li>
+                    <li>It is clearly labeled ("STARTER ARTIFACT", "Example") and the UI text explicitly says "this is what a real agent response feels like in Harness" and invites the user to create their own.</li>
+                    <li>Once the user sends their first real prompt and creates real artifacts, the example behavior does not re-appear for new sessions (clean slate by default, with easy access to starters if wanted later).</li>
+                </ul>
+                <p>
+                    <strong>Why production apps should do this (when done right):</strong>
+                </p>
+                <ul>
+                    <li>Reduces the terrifying blank slate on first open.</li>
+                    <li>Immediately demonstrates the core magic (rich, self-contained, interactive HTML as the agent's primary response) better than any text description or tooltip ever could.</li>
+                    <li>Teaches the expected quality bar and interaction model by example.</li>
+                    <li>Feels intentional and high-signal when the examples are genuinely excellent and clearly marked as such (not fake "demo chats" that make the product feel toy-like).</li>
+                    <li>Users can instantly see the value and get inspired, then create their own real work.</li>
+                </ul>
+                <p>
+                    This is the recommended pattern for a production agentic/HTML-first tool: one or two curated, beautiful starter artifacts that show what "good" looks like, with a clear path to a blank, focused workspace for real usage.
+                </p>
+                <div class="meta">
+                    Updated the renderer with this onboarding logic. Rebuild of harness.exe recommended for the final experience.
+                </div>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 20:30) -->
         <article class="entry">
             <div class="entry-header">
