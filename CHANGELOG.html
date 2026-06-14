@@ -146,6 +146,46 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 19:00) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 19:00</div>
+                <h2 class="entry-title">Progress assessment: How much is actually "done"?</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    Honest snapshot after the one-shot phase implementation, Vite setup, multiple fixes to make things runnable, and user feedback that "features don't work."
+                </p>
+
+                <h3>Overall Project Status</h3>
+                <ul>
+                    <li><strong>Static prototype / vision demo</strong> (<code>harness-ui-mock.html</code>): ~100% done as a self-contained, interactive demonstration. It closely follows the reference screenshot, implements the full conversation-based model (user prompt in main column → agent responds with rich HTML card in the thread), has expandable cards, follow-ups, and rich content. This is still the best way to experience the intended UI right now.</li>
+                    <li><strong>Documentation &amp; Planning</strong>: ~85-90% done. CHANGELOG is prepend-only blogpost style with timestamps, full commit IDs, GitHub links, and compare ranges. README reflects current direction. HTML_CONTRACT.html is solid. Phases are clearly defined.</li>
+                    <li><strong>Real app in <code>app/</code> (Vite + modular TS)</strong>: ~25-35% toward a working MVP. The "one shot" put skeleton code in place for all 6 phases, but per testing it does not yet deliver reliable features. A self-contained fallback version of index.html makes basic chat + cards work when opened directly, but the proper Vite modular version needs more wiring and richer content.</li>
+                </ul>
+
+                <h3>Phase-by-Phase Breakdown (current estimate)</h3>
+                <ol>
+                    <li><strong>Real Interactive Viewer (MVP)</strong> — ~40%. Layout and basic dynamic chat thread exist (user messages + agent HTML cards via iframes). Prompt input at bottom of main column works in the self-contained demo. Sidebar and right panel are present but static. Not yet as rich or polished as the static mock. TDD/SOLID structure started in <code>src/</code>.</li>
+                    <li><strong>Real Agent Integration</strong> — ~10-15%. Only a <code>MockAgentClient</code> that returns very basic hardcoded HTML. No real LLM call, no enforcement of the full HTML_CONTRACT in runtime responses. RealAgentClient is a stub.</li>
+                    <li><strong>Sessions, Persistence &amp; History</strong> — ~25%. LocalStoragePersistence class exists and basic save/load works in the demo (conversation survives page reload). No multi-session UI or advanced features (fork, export as single HTML, etc.).</li>
+                    <li><strong>Harness Bridge for Card Interactivity</strong> — ~15-20%. <code>setupBridge</code> and postMessage handling are in place and partially wired for follow-ups in demo cards. Not robust or fully implemented across cards.</li>
+                    <li><strong>Desktop Shell + Auth</strong> — ~5%. Only a basic <code>electron-main.js</code> stub. No real wrapper, no auth flows, no native integration yet.</li>
+                    <li><strong>Polish, Dogfooding &amp; Expansion</strong> — ~10%. Some demo cards, comments referencing examples/templates, self-referential notes in the UI. No real dogfooding, gallery, accessibility pass, or rich patterns beyond basics.</li>
+                </ol>
+
+                <p>
+                    <strong>Key takeaway:</strong> The <em>vision</em> and <em>spec</em> (what the UI should feel like, how agents should respond with HTML cards in a conversation) are well captured and demonstrated in the static mock. The <em>executable code</em> for a real, maintainable, extensible app is still early scaffolding. The one-shot put the pieces on the table following SOLID and TDD intent, but the features are not yet delivering the experience.
+                </p>
+
+                <div class="meta">
+                    Related recent commits: 2471610 (self-contained fix), 639a65d (one-shot phases), ab7ca31 (phases defined in CHANGELOG).
+                </div>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 18:45) -->
         <article class="entry">
             <div class="entry-header">
