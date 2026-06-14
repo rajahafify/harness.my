@@ -146,6 +146,33 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 21:15) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 21:15</div>
+                <h2 class="entry-title">Standardized versioning for harness.exe (x.x.x, increment minor/patch)</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    Updated packaging to use consistent x.x.x semantic versioning.
+                </p>
+                <ul>
+                    <li>package.json version bumped to 0.1.1 (just adding to the minor/patch number for each production update, as requested).</li>
+                    <li>electron-builder now outputs versioned executables: <code>harness-0.1.1.exe</code> (portable) and the NSIS installer also uses the version in name.</li>
+                    <li>Kept the build producing clean "harness-${version}.exe" for the main portable deliverable. No more ambiguous "Harness 0.1.0.exe" vs our copy.</li>
+                    <li>Rebuilt with the latest production UI (clean professional layout, rich contract-aligned HTML cards, real AI support via Settings, expandable artifact pane, intentional first-run example).</li>
+                </ul>
+                <p>
+                    The deliverable is now always the versioned <code>harness-x.x.x.exe</code> in <code>app/dist/</code>. Just keep incrementing the appropriate number for future releases.
+                </p>
+                <div class="meta">
+                    Built new harness-0.1.1.exe (and updated the copy to dist/harness.exe for convenience, but primary is the versioned one).
+                </div>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 21:00) -->
         <article class="entry">
             <div class="entry-header">

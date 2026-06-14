@@ -1,6 +1,6 @@
 {
   "name": "harness",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Agentic harness using HTML as first-class UI. Conversation-based like Codex/Claude Code, where agents respond with rich, interactive HTML cards by default.",
   "author": "Raja Hafify",
   "main": "main.js",
@@ -45,7 +45,11 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
+      "createStartMenuShortcut": true,
+      "artifactName": "harness-${version}.exe"
+    },
+    "portable": {
+      "artifactName": "harness-${version}.exe"
     },
     "asar": true,
     "compression": "maximum"
