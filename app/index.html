@@ -228,8 +228,10 @@
         <div class="h-12 border-b bg-white flex items-center px-4 justify-between">
             <div class="font-semibold" id="current-session-title">New Session</div>
             <div class="flex items-center gap-2 text-xs">
+                <span id="agent-status" class="px-2 py-0.5 rounded bg-gray-100 text-gray-600 text-[10px]">Mock</span>
                 <button onclick="newSession()" class="px-3 py-1 rounded border text-sm hover:bg-gray-50">New Session</button>
                 <button onclick="exportSession()" class="px-3 py-1 rounded border text-sm hover:bg-gray-50">Export as HTML</button>
+                <button onclick="openSettings()" class="px-2 text-lg leading-none" title="Agent Settings (real AI)">⚙</button>
             </div>
         </div>
 
@@ -547,12 +549,132 @@
             }, 800);
         }
 
+        // Settings modal + real AI support
+        let currentSettings = { provider: 'mock' };
+
+        async function loadAgentStatus() {
+            try {
+                if (window.harnessAPI && window.harnessAPI.getSettings) {
+                    currentSettings = await window.harnessAPI.getSettings();
+                }
+            } catch (e) {}
+            const statusEl = document.getElementById('agent-status');
+            if (statusEl) {
+                if (currentSettings.provider === 'grok-cli' || currentSettings.autoGrok) {
+                    statusEl.textContent = 'Grok (your CLI login)';
+                    statusEl.className = 'px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 text-[10px]';
+                } else if (currentSettings.provider && currentSettings.provider !== 'mock') {
+                    statusEl.textContent = currentSettings.provider;
+                    statusEl.className = 'px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 text-[10px]';
+                } else {
+                    statusEl.textContent = 'Mock (configure real AI)';
+                    statusEl.className = 'px-2 py-0.5 rounded bg-gray-100 text-gray-600 text-[10px]';
+                }
+            }
+        }
+
+        function openSettings() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/60 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl">
+                    <h3 class="font-semibold text-lg mb-4">Agent Settings (Real AI)</h3>
+                    
+                    <div class="space-y-4 text-sm">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Provider</label>
+                            <select id="prov" class="w-full border rounded px-3 py-2">
+                                <option value="mock">Mock (high-quality local simulation)</option>
+                                <option value="grok-cli">Grok (auto from your CLI login)</option>
+                                <option value="xai">xAI / Grok (API key)</option>
+                                <option value="openai">OpenAI compatible</option>
+                            </select>
+                        </div>
+                        
+                        <div id="key-row">
+                            <label class="block text-xs font-medium text-gray-500 mb-1">API Key</label>
+                            <input id="key" type="password" class="w-full border rounded px-3 py-2" placeholder="sk-... or your xAI key">
+                        </div>
+                        
+                        <div id="url-row">
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Base URL</label>
+                            <input id="url" type="text" class="w-full border rounded px-3 py-2" value="https://api.x.ai/v1">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Model</label>
+                            <input id="model" type="text" class="w-full border rounded px-3 py-2" value="grok-2-latest" placeholder="grok-2-latest or gpt-4o">
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex gap-2 justify-end text-sm">
+                        <button onclick="this.closest('.fixed').remove()" class="px-4 py-1.5 rounded border">Cancel</button>
+                        <button onclick="saveSettingsFromModal(this)" class="px-4 py-1.5 rounded bg-emerald-700 text-white">Save & Use Real AI</button>
+                    </div>
+                    
+                    <div class="mt-4 text-[10px] text-gray-500">
+                        Tip: If you have the Grok CLI logged in ("grok login"), choose "Grok (auto from your CLI login)" — no extra key needed.
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // Pre-fill
+            loadAgentStatus().then(() => {
+                const prov = modal.querySelector('#prov');
+                const key = modal.querySelector('#key');
+                const url = modal.querySelector('#url');
+                const model = modal.querySelector('#model');
+
+                prov.value = currentSettings.provider || 'mock';
+                key.value = currentSettings.apiKey || '';
+                url.value = currentSettings.baseURL || 'https://api.x.ai/v1';
+                model.value = currentSettings.model || 'grok-2-latest';
+
+                prov.onchange = () => {
+                    const showKey = prov.value !== 'mock' && prov.value !== 'grok-cli';
+                    modal.querySelector('#key-row').style.display = showKey ? '' : 'none';
+                    modal.querySelector('#url-row').style.display = (prov.value === 'openai' || prov.value === 'xai') ? '' : 'none';
+                };
+                prov.onchange();
+            });
+        }
+
+        async function saveSettingsFromModal(btn) {
+            const modal = btn.closest('.fixed');
+            const prov = modal.querySelector('#prov').value;
+            const apiKey = modal.querySelector('#key').value.trim();
+            const baseURL = modal.querySelector('#url').value.trim();
+            const model = modal.querySelector('#model').value.trim();
+
+            const settings = { provider: prov };
+            if (apiKey) settings.apiKey = apiKey;
+            if (baseURL) settings.baseURL = baseURL;
+            if (model) settings.model = model;
+
+            if (window.harnessAPI && window.harnessAPI.saveSettings) {
+                await window.harnessAPI.saveSettings(settings);
+            } else {
+                localStorage.setItem('harness-settings', JSON.stringify(settings));
+            }
+
+            modal.remove();
+            await loadAgentStatus();
+            alert('Settings saved. Next prompts will try to use real AI if configured.');
+        }
+
+        // Boot - Production onboarding with intentional examples
+        loadSession();
+        loadAgentStatus();
+
+        // ... (the rest of the boot code with the example seeding remains)
+
         // Expose for bridge if needed
         window.harness = {
             requestFollowUp: (p) => { promptInput.value = p; sendPrompt(); }
         };
 
-        console.log('%c[Harness] Production app ready. Clean, intentional, HTML-first agentic experience. High-quality example artifact shown on first run to demonstrate the power without feeling like a toy demo.', 'color:#059669');
+        console.log('%c[Harness] Production app ready. Real AI supported via Settings (Grok CLI auto or API key).', 'color:#059669');
     </script>
 </body>
 </html>

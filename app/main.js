@@ -1,9 +1,33 @@
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
 let mainWindow;
 const isDev = process.env.VITE_DEV_SERVER_URL || process.defaultApp;
+
+// Simple settings store (production: could use electron-store)
+function getSettingsPath() {
+  return path.join(app.getPath('userData'), 'settings.json');
+}
+
+function loadSettings() {
+  try {
+    const p = getSettingsPath();
+    if (fs.existsSync(p)) {
+      return JSON.parse(fs.readFileSync(p, 'utf8'));
+    }
+  } catch (e) {}
+  return { provider: 'mock' };
+}
+
+function saveSettings(settings) {
+  try {
+    fs.writeFileSync(getSettingsPath(), JSON.stringify(settings, null, 2));
+  } catch (e) {
+    logToFile('Failed to save settings: ' + e.message);
+  }
+}
 
 function logToFile(message) {
   const logPath = path.join(app.getPath('userData'), 'harness.log');
@@ -140,30 +164,122 @@ app.on('window-all-closed', () => {
 ipcMain.handle('agent-generate-html', async (event, prompt) => {
   try {
     logToFile(`Agent request for prompt: ${prompt.substring(0, 100)}...`);
-    const html = generateMockHtmlResponse(prompt);
-    return html;
+    const settings = loadSettings();
+
+    if (settings.provider && settings.provider !== 'mock') {
+      const realHtml = await callRealAgent(prompt, settings);
+      if (realHtml) return realHtml;
+    }
+
+    // Fallback to excellent local simulation
+    return generateLocalRichHtml(prompt);
   } catch (err) {
     logToFile(`Agent error: ${err.message}`);
-    return `<!doctype html><html><body><h3>Error generating response</h3><p>${err.message}</p></body></html>`;
+    return `<!doctype html><html><body><h3>Error generating response</h3><p>${err.message}</p><p>Check Settings (gear icon) to configure a real LLM provider.</p></body></html>`;
   }
 });
 
-function generateMockHtmlResponse(prompt) {
-  // Production note: In a real deployment, this would securely call an LLM (Grok/Claude/etc.)
-  // with the FULL content of HTML_CONTRACT.html prepended as the system prompt,
-  // plus conversation history and any workspace context. The LLM is instructed
-  // to output ONLY a complete, self-contained, beautifully designed <!doctype html>
-  // that serves as the rich, interactive response (no markdown fences, no extra text).
-  //
-  // For this production-grade build we simulate a very capable agent using the
-  // project's own templates, examples, and design system (AGENTS.html / mock styles)
-  // so the cards feel intentional, high-craft, and exactly like what the contract
-  // describes. Responses are varied, context-aware, and fully interactive.
+async function generateMockHtmlResponse(prompt) {
+  // Production: Try real AI first (Grok via your existing CLI login, or configured OpenAI-compatible)
+  // Falls back to high-quality local simulation using the project's design system and contract.
 
+  try {
+    const realHtml = await tryRealAgent(prompt);
+    if (realHtml) return realHtml;
+  } catch (e) {
+    logToFile(`Real agent failed, falling back to local simulation: ${e.message}`);
+  }
+
+  // High-quality local simulation (still very good, uses the project's own refined patterns)
+  return generateLocalRichHtml(prompt);
+}
+
+async function tryRealAgent(prompt) {
+  // 1. Try to use your existing Grok CLI login (recommended for this harness)
+  const grokToken = getGrokCliToken();
+  if (grokToken) {
+    const system = getHtmlContractSystemPrompt();
+    const messages = [
+      { role: 'system', content: system },
+      { role: 'user', content: prompt }
+    ];
+
+    const resp = await fetch('https://cli-chat-proxy.grok.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${grokToken}`,
+        'X-XAI-Token-Auth': 'xai-grok-cli',
+        'x-grok-model-override': 'grok-build'
+      },
+      body: JSON.stringify({
+        model: 'grok-build',
+        messages,
+        stream: false,
+        temperature: 0.7,
+        max_tokens: 4000
+      })
+    });
+
+    if (!resp.ok) throw new Error(`Grok proxy error: ${resp.status}`);
+    const data = await resp.json();
+    let content = data.choices?.[0]?.message?.content || '';
+    content = stripMarkdownFences(content);
+    if (content.includes('<!doctype') || content.includes('<html')) {
+      logToFile('Real Grok agent succeeded with HTML response');
+      return content.trim();
+    }
+  }
+
+  // 2. Fallback to user-configured OpenAI-compatible (if they set one in future settings)
+  // For now, if no Grok token, we fall through to local simulation.
+  // (You can extend this with electron-store for apiKey + baseURL + model)
+
+  return null;
+}
+
+function getGrokCliToken() {
+  try {
+    const authPath = path.join(os.homedir(), '.grok', 'auth.json');
+    if (!fs.existsSync(authPath)) return null;
+    const auth = JSON.parse(fs.readFileSync(authPath, 'utf8'));
+    // From the Grok CLI structure
+    const token = auth['https://accounts.x.ai/sign-in']?.key || auth.key;
+    return token || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function getHtmlContractSystemPrompt() {
+  // In production, this should load the full HTML_CONTRACT.html
+  // For the exe, we embed the critical instructions.
+  return `You are operating in HTML-first mode for Harness.
+
+Your ONLY final output for this turn MUST be one complete, self-contained, production-quality HTML5 document beginning with <!doctype html> and ending with </html>.
+
+Rules (non-negotiable):
+- Standalone & self-contained. Render perfectly when opened directly.
+- Beautiful by default. Strong visual hierarchy, generous whitespace, modern UI patterns (cards, badges, progress, interactive elements), consistent with the project's design language (emerald accents, clean typography, intentional spacing).
+- Purposeful interactivity. At least one useful interactive element (buttons, forms, live computation, etc.). Use vanilla JS.
+- Progressive enhancement. The HTML must be excellent standalone. Detect window.harness if present for richer behaviors.
+- No markdown fences. Output ONLY the raw HTML document.
+- Quality bar. Intentional, accessible, responsive, fast, scannable. Choose the right scale (quick card or full experience).
+- The response is the HTML artifact. The user will see it rendered as a first-class card in the conversation.
+
+When the user asks a question, your response is the HTML artifact that best advances their goal. Design and deliver the answer as the HTML.`;
+}
+
+function stripMarkdownFences(text) {
+  return text.replace(/```html\s*([\s\S]*?)```/g, '$1').trim();
+}
+
+function generateLocalRichHtml(prompt) {
+  // High-quality local simulation (production-grade fallback)
+  // Uses the project's design system so cards feel intentional and match the rest of the harness.
   const safe = prompt.replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const lower = prompt.toLowerCase();
 
-  // Base shell using the project's design tokens (emerald, cards, etc.)
   const baseStyle = `
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
@@ -185,7 +301,6 @@ function generateMockHtmlResponse(prompt) {
   let html = `<!doctype html><html><head><meta charset="UTF-8"><title>Harness Card</title>${baseStyle}</head><body>`;
 
   if (lower.includes('plan') || lower.includes('roadmap') || lower.includes('phases') || lower.includes('todo')) {
-    // Rich version inspired by examples/interactive-plan.html + templates
     html += `
       <div class="card">
         <div class="header">
@@ -265,7 +380,6 @@ function generateMockHtmlResponse(prompt) {
       </div>
     `;
   } else {
-    // General rich card, using base shell + nice components from the project's design language
     html += `
       <div class="card">
         <div class="header">
@@ -299,3 +413,99 @@ function generateMockHtmlResponse(prompt) {
 app.on('before-quit', () => {
   logToFile('Application quitting gracefully.');
 });
+
+// Settings IPC
+ipcMain.handle('get-settings', () => {
+  return loadSettings();
+});
+
+ipcMain.handle('save-settings', (event, settings) => {
+  saveSettings(settings);
+  return true;
+});
+
+// Real agent call (production)
+async function callRealAgent(prompt, settings) {
+  const systemPrompt = getHtmlContractSystemPrompt();
+
+  let baseURL = settings.baseURL || 'https://api.x.ai/v1';
+  let apiKey = settings.apiKey;
+  let model = settings.model || 'grok-2-latest';
+
+  if (settings.provider === 'grok-cli') {
+    const token = getGrokCliToken();
+    if (!token) throw new Error('No Grok CLI login found. Please run "grok login" first or configure API key in Settings.');
+    baseURL = 'https://cli-chat-proxy.grok.com/v1';
+    apiKey = token;
+    // Headers are special for the proxy
+  }
+
+  if (!apiKey && settings.provider !== 'mock') {
+    throw new Error('No API key configured. Go to Settings to add one (or use Grok CLI login).');
+  }
+
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: prompt }
+  ];
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${apiKey}`,
+  };
+
+  if (settings.provider === 'grok-cli') {
+    headers['X-XAI-Token-Auth'] = 'xai-grok-cli';
+    headers['x-grok-model-override'] = 'grok-build';
+    model = 'grok-build';
+  }
+
+  const resp = await fetch(`${baseURL}/chat/completions`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      model,
+      messages,
+      stream: false,
+      temperature: 0.7,
+      max_tokens: 4096
+    })
+  });
+
+  if (!resp.ok) {
+    const errText = await resp.text();
+    throw new Error(`LLM error ${resp.status}: ${errText}`);
+  }
+
+  const data = await resp.json();
+  let content = data.choices?.[0]?.message?.content || '';
+  content = stripMarkdownFences(content).trim();
+
+  if (!content.includes('<!doctype') && !content.includes('<html')) {
+    // Model didn't follow instructions — wrap it
+    content = `<!doctype html><html><body><pre>${content}</pre></body></html>`;
+  }
+
+  logToFile('Real agent call succeeded');
+  return content;
+}
+
+function getHtmlContractSystemPrompt() {
+  // Embedded critical part of the contract for the packaged app
+  return `You are operating in HTML-first mode for Harness.
+
+Your ONLY final output for this turn MUST be one complete, self-contained, production-quality HTML5 document beginning with <!doctype html> and ending with </html>.
+
+Rules (non-negotiable):
+- Standalone & self-contained. Render perfectly when opened directly.
+- Beautiful by default. Strong visual hierarchy, generous whitespace, modern UI patterns (cards, badges, progress, interactive elements), consistent with the project's design language.
+- Purposeful interactivity. At least one useful interactive element.
+- No markdown fences in the final output. Output ONLY the raw HTML document.
+- The response is the HTML artifact the user will see and use.
+
+When the user asks a question, your response is the HTML artifact that best advances their goal. Design and deliver the answer as the HTML.`;
+}
+
+function stripMarkdownFences(text) {
+  return text.replace(/```html\s*([\s\S]*?)```/gi, '$1').replace(/```\s*([\s\S]*?)```/g, '$1').trim();
+}

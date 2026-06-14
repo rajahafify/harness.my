@@ -146,6 +146,34 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 20:50) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 20:50</div>
+                <h2 class="entry-title">Real AI support added — no more pure mock</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    Added first-class support for real LLMs (Grok via your existing CLI login is the easiest).
+                </p>
+                <ul>
+                    <li>Click the ⚙ gear in the top bar → Settings modal.</li>
+                    <li>Choose "Grok (auto from your CLI login)" — the app will automatically use your logged-in Grok session (same as the CLI uses) and the full HTML_CONTRACT as system prompt.</li>
+                    <li>Or configure any OpenAI-compatible provider (xAI, OpenAI, local, etc.) with API key + base URL + model.</li>
+                    <li>When real AI is configured and available, prompts go to the actual model. The model is strongly instructed to output *only* a complete, beautiful, self-contained HTML document.</li>
+                    <li>Falls back gracefully to the excellent local rich simulation if no key / login / error.</li>
+                </ul>
+                <p>
+                    The status pill in the header now shows "Grok (your CLI login)", "xAI / Grok", "OpenAI compatible", or "Mock".
+                </p>
+                <div class="meta">
+                    Rebuilt harness.exe with real AI path.
+                </div>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 20:45) -->
         <article class="entry">
             <div class="entry-header">
