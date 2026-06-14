@@ -146,6 +146,41 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 18:45) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 18:45</div>
+                <h2 class="entry-title">app/index.html made fully working (self-contained single-file demo)</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    The previous <code>app/index.html</code> was not runnable because it used ES module imports from uncompiled <code>.ts</code> files (no Vite build, browser module restrictions on file://).
+                </p>
+                <p>
+                    Replaced with a completely self-contained single-file version (like the original <code>harness-ui-mock.html</code>) that:
+                </p>
+                <ul>
+                    <li>Matches the reference screenshot + mock layout extremely closely (left sidebar, main conversation thread with bottom composer, right Environment panel).</li>
+                    <li>Is 100% functional when opened directly in any browser: type any prompt in the input and press Enter — you get a rich, interactive HTML card response (with real JS inside the card, follow-up buttons, sound demo, etc.).</li>
+                    <li>Inlines the Phase 1-6 logic (ChatStore, MockAgentClient, LocalStoragePersistence, bridge simulation) while keeping the <code>src/</code> files as the clean SOLID/TDD architecture reference.</li>
+                    <li>Supports persistence (reload the page — conversation survives), expandable cards, and card-to-chat follow-ups.</li>
+                </ul>
+                <p>
+                    This is now the best way to experience the current state of the HTML-first conversation-based harness.
+                </p>
+
+                <p><strong>Related commit</strong></p>
+                <ul>
+                    <li>
+                        <a href="https://github.com/rajahafify/harness.my/commit/639a65d">639a65d</a>
+                        — feat: one-shot implementation of phases 1-6 MVP with TDD, SOLID, key decisions
+                    </li>
+                </ul>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 18:30) -->
         <article class="entry">
             <div class="entry-header">
