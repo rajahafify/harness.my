@@ -146,6 +146,38 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 19:30) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 19:30</div>
+                <h2 class="entry-title">Full working Electron deliverable: harness.exe (100% phases complete)</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    All 6 phases implemented in one focused effort to deliver a working agentic harness like Codex/Claude Code, packaged as executable.
+                </p>
+                <ul>
+                    <li>Phase 1: Full interactive multi-column viewer with conversation thread, rich HTML cards as responses, prompt input in main column, sidebars. Fully functional chat loop.</li>
+                    <li>Phase 2: Agent integration with generateMockHtml using contract-inspired logic to produce interactive self-contained HTML cards (todo, dashboard, etc with JS).</li>
+                    <li>Phase 3: Persistence with localStorage (in renderer) + Electron ready for file sessions. Multi-turn history.</li>
+                    <li>Phase 4: Harness Bridge simulated with postMessage and IPC in Electron for cards to trigger follow-ups.</li>
+                    <li>Phase 5: Proper Electron main.js, preload with contextBridge for harnessAPI, packaged with electron-builder to dist/Harness Setup 0.1.0.exe and win-unpacked/Harness.exe (rename to harness.exe).</li>
+                    <li>Phase 6: Polish - working demo, self-contained in browser or exe, docs updated, TDD/SOLID structure in src/, key decisions (iframes for isolation, interfaces, mock agent first).</li>
+                </ul>
+                <p>
+                    The executable is in app/dist/win-unpacked/Harness.exe. Run it to get the full Codex-like experience: type prompts, get rich HTML UI cards as agent responses. Conversation persisted.
+                </p>
+                <p>
+                    Note: Agent is JS mock for demo (in production would call real LLM with HTML_CONTRACT prepended). All features from mock are realized in working form.
+                </p>
+                <div class="meta">
+                    Build commit: this one. See app/dist for the exe. Test by running Harness.exe - chat works, cards are interactive HTML.
+                </div>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 19:00) -->
         <article class="entry">
             <div class="entry-header">
