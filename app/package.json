@@ -22,6 +22,7 @@
       "main.js",
       "preload.js"
     ],
+
     "win": {
       "target": "nsis",
       "icon": "icon.ico"
@@ -29,7 +30,8 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
-    }
+    },
+    "asar": true
   },
   "devDependencies": {
     "electron": "^31.0.0",

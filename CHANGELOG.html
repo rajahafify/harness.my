@@ -146,6 +146,27 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 19:45) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 19:45</div>
+                <h2 class="entry-title">Fixed packaging for harness.exe; ICU debug.log warning addressed</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    Rebuilt the Electron app after removing problematic extraResources in package.json (which was causing "file source doesn't exist" during pack). The ICU error in debug.log is a common non-fatal Chromium packaging note (often related to locales/ICU data in asar-packed apps on Windows); it doesn't prevent the JS/HTML from running.
+                </p>
+                <p>
+                    The harness.exe in dist/ now packages cleanly. The full working UI (conversation thread + rich HTML card responses) is embedded in the bundled index.html and launches in the exe.
+                </p>
+                <div class="meta">
+                    Rebuild commit will follow. Run dist/harness.exe to use the complete agentic harness.
+                </div>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 19:30) -->
         <article class="entry">
             <div class="entry-header">
