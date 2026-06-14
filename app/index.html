@@ -603,10 +603,9 @@
                         <div>
                             <label class="block text-xs font-medium text-gray-500 mb-1">Provider</label>
                             <select id="prov" class="w-full border rounded px-3 py-2">
-                                <option value="mock">Mock (high-quality local simulation)</option>
-                                <option value="grok-cli">Grok (auto from your CLI login)</option>
-                                <option value="xai">xAI / Grok (API key)</option>
-                                <option value="openai">OpenAI compatible</option>
+                                <option value="grok-cli">Grok (auto from your CLI login — recommended)</option>
+                                <option value="xai">xAI / Grok (direct API key)</option>
+                                <option value="openai">OpenAI compatible (BYOK)</option>
                             </select>
                         </div>
                         
@@ -683,7 +682,7 @@
         }
 
         // Boot - Production onboarding with intentional examples
-        loadSession();
+        loadSessions();
         loadAgentStatus();
 
         // ... (the rest of the boot code with the example seeding remains)

@@ -15,10 +15,15 @@ function loadSettings() {
   try {
     const p = getSettingsPath();
     if (fs.existsSync(p)) {
-      return JSON.parse(fs.readFileSync(p, 'utf8'));
+      const s = JSON.parse(fs.readFileSync(p, 'utf8'));
+      return s;
     }
   } catch (e) {}
-  return { provider: 'mock' };
+  // Production default: auto-use real Grok if CLI login token is present on this machine
+  if (getGrokCliToken()) {
+    return { provider: 'grok-cli' };
+  }
+  return { provider: 'grok' }; // will require user to enter key in Settings or run grok login
 }
 
 function saveSettings(settings) {
@@ -161,24 +166,23 @@ app.on('window-all-closed', () => {
 });
 
 // Production-grade IPC for agent (called from renderer via preload)
+// ALWAYS attempts real Grok (CLI auto-detect or configured key). Only returns the instructional
+// setup card when no credentials are available at all. No mock / local simulation in normal path.
 ipcMain.handle('agent-generate-html', async (event, prompt) => {
   try {
     logToFile(`Agent request for prompt: ${prompt.substring(0, 100)}...`);
     const settings = loadSettings();
 
-    // Always try real AI first (Grok CLI auto or configured key)
-    if (settings.provider !== 'mock' && (settings.apiKey || settings.provider === 'grok-cli' || !settings.provider)) {
-      try {
-        const realHtml = await callRealAgent(prompt, settings);
-        if (realHtml) {
-          return realHtml;
-        }
-      } catch (realErr) {
-        logToFile(`Real agent failed: ${realErr.message}`);
+    try {
+      const realHtml = await callRealAgent(prompt, settings);
+      if (realHtml) {
+        return realHtml;
       }
+    } catch (realErr) {
+      logToFile(`Real agent failed: ${realErr.message}`);
     }
 
-    // No real AI configured or all real attempts failed → return a clear setup instruction card (no mock response)
+    // No credentials or all real attempts failed → clean setup card (never mock content)
     return getSetupRequiredHtml(prompt);
   } catch (err) {
     logToFile(`Unexpected agent error: ${err.message}`);
@@ -191,74 +195,36 @@ function getSetupRequiredHtml(prompt) {
   return `<!doctype html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;background:#f8fafc;color:#0f172a;padding:16px;margin:0}.card{max-width:600px;margin:0 auto;background:white;border:1px solid #e2e8f0;border-radius:12px;padding:20px;box-shadow:0 4px 6px -1px rgb(15 23 42 / 0.07)}h2{color:#059669;margin-top:0}.badge{font-size:10px;padding:2px 8px;background:#d1fae5;color:#059669;border-radius:999px}</style></head><body><div class="card"><h2>Setup Required for Real AI <span class="badge">GROK</span></h2><p><strong>Your prompt:</strong> ${safe}</p><p>This Harness app requires a real LLM (Grok) to generate the HTML response cards.</p><p><strong>Quick fix:</strong></p><ol><li>Open your terminal and run: <code>grok login</code></li><li>Restart this app, or click the gear icon (⚙) in the header and select "Grok (auto from your CLI login)"</li><li>Alternatively, add an xAI or OpenAI-compatible API key in Settings.</li></ol><p>Once configured, every prompt will produce a real, rich, self-contained interactive HTML artifact exactly as specified in the HTML_CONTRACT.</p><button onclick="parent.postMessage({type:'harness-request', action:'open-settings'}, '*')">Open Settings</button></div></body></html>`;
 }
 
-async function generateMockHtmlResponse(prompt) {
-  // Production: Try real AI first (Grok via your existing CLI login, or configured OpenAI-compatible)
-  // Falls back to high-quality local simulation using the project's design system and contract.
-
-  try {
-    const realHtml = await tryRealAgent(prompt);
-    if (realHtml) return realHtml;
-  } catch (e) {
-    logToFile(`Real agent failed, falling back to local simulation: ${e.message}`);
-  }
-
-  // High-quality local simulation (still very good, uses the project's own refined patterns)
-  return generateLocalRichHtml(prompt);
-}
-
-async function tryRealAgent(prompt) {
-  // 1. Try to use your existing Grok CLI login (recommended for this harness)
-  const grokToken = getGrokCliToken();
-  if (grokToken) {
-    const system = getHtmlContractSystemPrompt();
-    const messages = [
-      { role: 'system', content: system },
-      { role: 'user', content: prompt }
-    ];
-
-    const resp = await fetch('https://cli-chat-proxy.grok.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${grokToken}`,
-        'X-XAI-Token-Auth': 'xai-grok-cli',
-        'x-grok-model-override': 'grok-build'
-      },
-      body: JSON.stringify({
-        model: 'grok-build',
-        messages,
-        stream: false,
-        temperature: 0.7,
-        max_tokens: 4000
-      })
-    });
-
-    if (!resp.ok) throw new Error(`Grok proxy error: ${resp.status}`);
-    const data = await resp.json();
-    let content = data.choices?.[0]?.message?.content || '';
-    content = stripMarkdownFences(content);
-    if (content.includes('<!doctype') || content.includes('<html')) {
-      logToFile('Real Grok agent succeeded with HTML response');
-      return content.trim();
-    }
-  }
-
-  // 2. Fallback to user-configured OpenAI-compatible (if they set one in future settings)
-  // For now, if no Grok token, we fall through to local simulation.
-  // (You can extend this with electron-store for apiKey + baseURL + model)
-
-  return null;
-}
+// Legacy mock wrappers (generateMockHtmlResponse + tryRealAgent) removed in 0.1.2.
+// The only agent path is callRealAgent (real Grok CLI or BYOK) or the explicit setup card.
+// This keeps the binary clean and guarantees "no mock responses" for users.
 
 function getGrokCliToken() {
   try {
     const authPath = path.join(os.homedir(), '.grok', 'auth.json');
     if (!fs.existsSync(authPath)) return null;
     const auth = JSON.parse(fs.readFileSync(authPath, 'utf8'));
-    // From the Grok CLI structure
-    const token = auth['https://accounts.x.ai/sign-in']?.key || auth.key;
-    return token || null;
+
+    // Robust extraction for real Grok CLI auth.json shape (observed: { "https://auth.x.ai::UUID": { key: "eyJ..." } })
+    // Try known shapes + any plausible JWT under nested objects
+    for (const k of Object.keys(auth)) {
+      if (/auth\.x\.ai|x\.ai/i.test(k)) {
+        const val = auth[k];
+        if (val && typeof val === 'object' && typeof val.key === 'string' && val.key.length > 50) {
+          return val.key;
+        }
+      }
+    }
+    if (typeof auth.key === 'string' && auth.key.startsWith('ey')) return auth.key;
+
+    // Fallback scan
+    for (const v of Object.values(auth)) {
+      if (typeof v === 'string' && v.startsWith('eyJ') && v.length > 100) return v;
+      if (v && typeof v === 'object' && typeof v.key === 'string' && v.key.startsWith('eyJ')) return v.key;
+    }
+    return null;
   } catch (e) {
+    logToFile('getGrokCliToken parse error: ' + e.message);
     return null;
   }
 }
@@ -286,6 +252,9 @@ function stripMarkdownFences(text) {
   return text.replace(/```html\s*([\s\S]*?)```/g, '$1').trim();
 }
 
+/* generateLocalRichHtml (legacy local simulation with fake plans/dashboards) fully removed from active path in 0.1.2.
+   Left commented (not deleted) so git history preserves the evolution, but it can NEVER be reached now.
+   Only callRealAgent (real LLM + HTML_CONTRACT) or getSetupRequiredHtml are possible for users.
 function generateLocalRichHtml(prompt) {
   // High-quality local simulation (production-grade fallback)
   // Uses the project's design system so cards feel intentional and match the rest of the harness.
@@ -419,7 +388,8 @@ function generateLocalRichHtml(prompt) {
   }
 
   return `<!doctype html><html><head><meta charset="UTF-8"><title>Harness Card</title></head><body>${html}</body></html>`;
-}
+}   // end of legacy — closing comment below deactivates the whole function
+*/
 
 // Graceful shutdown logging
 app.on('before-quit', () => {

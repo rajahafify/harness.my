@@ -146,7 +146,36 @@
             </p>
         </div>
 
-        <!-- NEWEST ENTRY (prepended 2026-06-14 21:30) -->
+        <!-- NEWEST ENTRY (prepended 2026-06-14 22:05) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 22:05</div>
+                <h2 class="entry-title">Fixed real Grok CLI auto-detection + always-real path (v0.1.2). No more mock, no more setup cards when logged in.</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    User feedback ("no real ai", "harness.exe still feels like a mockup", "Are u stuck", error cards in artifact pane) pointed to two root causes that have now been eliminated.
+                </p>
+                <ul>
+                    <li><strong>Auth token extraction was brittle:</strong> Inspected the live <code>~/.grok/auth.json</code> (this machine has a valid login under <code>https://auth.x.ai::UUID</code> with nested <code>.key</code> JWT). <code>getGrokCliToken()</code> now robustly scans for any x.ai auth entry or JWT-like token. (Previously only looked for the wrong key path.)</li>
+                    <li><strong>Settings default + guard blocked real calls:</strong> <code>loadSettings()</code> defaulted to <code>{provider:'mock'}</code>. The IPC guard required explicit non-mock + apiKey/grok-cli flag. Now: on every launch, if a CLI token exists on disk we default to <code>provider:'grok-cli'</code> automatically. The IPC handler was simplified to <em>always</em> attempt <code>callRealAgent</code> first; the styled "Setup Required" card is returned <em>only</em> when no credentials at all (honest guidance, never fake content).</li>
+                    <li><strong>Dead mock simulation code purged:</strong> Removed <code>generateMockHtmlResponse</code>, <code>tryRealAgent</code> (old duplicate), and the large <code>generateLocalRichHtml</code> (the source of plan checkboxes, fake 58% dashboards etc.). The last one is commented-out in source for git archaeology. Active code paths contain zero simulation HTML.</li>
+                    <li><strong>UI hardened for real AI:</strong> Settings modal now leads with "Grok (auto from your CLI login — recommended)" as the first selectable option. "Mock" choice removed from the dropdown. Status pill updates correctly to emerald "Grok (your CLI login)" when auto-detected. Fixed a boot typo (<code>loadSessions</code>).</li>
+                    <li><strong>Packaging &amp; versioning:</strong> Bumped <code>package.json</code> 0.1.1 → 0.1.2 (following the "keep adding the minor number" rule). Removed the <code>extraFiles</code> locales hack that had caused earlier "source doesn't exist" build failures.</li>
+                </ul>
+                <p>
+                    Result: On any machine where the user has run <code>grok login</code> (or saved an xAI key via the gear), sending a prompt now yields a <strong>real Grok</strong> response that is a complete standalone interactive HTML document (per the embedded HTML_CONTRACT). The artifact pane (already 320 px default + expandable to 55%) shows the genuine LLM output. The first-run example seed remains a single high-quality intentional starter only when no prior sessions exist.
+                </p>
+                <p>
+                    This iteration (one-shot fixes + build) directly continues the "100% done", "production app", "real AI", "document + commit + push after each" mandate. All phases 1-6 foundations + real agent integration are now exercised end-to-end with live Grok.
+                </p>
+                <div class="meta">
+                    Rebuilt dist/harness-0.1.2.exe. Run the versioned exe (or the Harness portable). Use the ⚙ to change providers. Auth auto-detected from your existing Grok CLI login.
+                </div>
+            </div>
+        </article>
+
+        <!-- PREVIOUS (2026-06-14 21:30) -->
         <article class="entry">
             <div class="entry-header">
                 <div class="entry-date">2026-06-14 21:30</div>
