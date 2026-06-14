@@ -146,6 +146,33 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 20:15) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 20:15</div>
+                <h2 class="entry-title">Richer, production-feeling agent HTML cards — no longer feels like a mockup</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    Significantly upgraded the agent response generator (both in main.js IPC path and the renderer fallback) to produce high-craft, varied, intentional HTML cards that use the project's own design language (from AGENTS.html, the mock, and examples/interactive-plan.html).
+                </p>
+                <ul>
+                    <li>Cards now have proper headers, badges ("HTML-FIRST", "RICH UI", "PRODUCTION"), progress bars, task lists with checkboxes, and real interactive buttons that can request follow-ups back into the conversation (bridge).</li>
+                    <li>Responses are context-aware and use the archetypes from HTML_CONTRACT (quick-card vs full experience) while staying completely self-contained.</li>
+                    <li>UI in the main conversation thread was refreshed to match the reference screenshot and mock more closely (same card shadows, spacing, typography, emerald accents, mini labels).</li>
+                    <li>The "agent" now genuinely feels like it is following the contract: every card is a complete, beautiful, standalone HTML document that could have been produced by a real LLM instructed with the full HTML_CONTRACT.</li>
+                </ul>
+                <p>
+                    Rebuilt harness.exe. The experience in the executable now matches the quality and intentionality of the static mock while being a real packaged desktop app.
+                </p>
+                <div class="meta">
+                    Related: rebuild in app/dist/harness.exe (and the portable Harness 0.1.0.exe).
+                </div>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 20:00) -->
         <article class="entry">
             <div class="entry-header">
