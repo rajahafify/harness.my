@@ -166,23 +166,30 @@ ipcMain.handle('agent-generate-html', async (event, prompt) => {
     logToFile(`Agent request for prompt: ${prompt.substring(0, 100)}...`);
     const settings = loadSettings();
 
-    if (settings.provider && settings.provider !== 'mock' && (settings.apiKey || settings.provider === 'grok-cli')) {
+    // Always try real AI first (Grok CLI auto or configured key)
+    if (settings.provider !== 'mock' && (settings.apiKey || settings.provider === 'grok-cli' || !settings.provider)) {
       try {
         const realHtml = await callRealAgent(prompt, settings);
-        if (realHtml) return realHtml;
+        if (realHtml) {
+          return realHtml;
+        }
       } catch (realErr) {
-        logToFile(`Real agent failed (${realErr.message}) - falling back to local rich simulation`);
+        logToFile(`Real agent failed: ${realErr.message}`);
       }
     }
 
-    // Always succeed with high-quality local simulation (production default for standalone exe)
-    return generateLocalRichHtml(prompt);
+    // No real AI configured or all real attempts failed → return a clear setup instruction card (no mock response)
+    return getSetupRequiredHtml(prompt);
   } catch (err) {
     logToFile(`Unexpected agent error: ${err.message}`);
-    // Still return a good card
-    return generateLocalRichHtml(prompt);
+    return getSetupRequiredHtml(prompt);
   }
 });
+
+function getSetupRequiredHtml(prompt) {
+  const safe = prompt.replace(/</g, '&lt;');
+  return `<!doctype html><html><head><meta charset="UTF-8"><style>body{font-family:system-ui;background:#f8fafc;color:#0f172a;padding:16px;margin:0}.card{max-width:600px;margin:0 auto;background:white;border:1px solid #e2e8f0;border-radius:12px;padding:20px;box-shadow:0 4px 6px -1px rgb(15 23 42 / 0.07)}h2{color:#059669;margin-top:0}.badge{font-size:10px;padding:2px 8px;background:#d1fae5;color:#059669;border-radius:999px}</style></head><body><div class="card"><h2>Setup Required for Real AI <span class="badge">GROK</span></h2><p><strong>Your prompt:</strong> ${safe}</p><p>This Harness app requires a real LLM (Grok) to generate the HTML response cards.</p><p><strong>Quick fix:</strong></p><ol><li>Open your terminal and run: <code>grok login</code></li><li>Restart this app, or click the gear icon (⚙) in the header and select "Grok (auto from your CLI login)"</li><li>Alternatively, add an xAI or OpenAI-compatible API key in Settings.</li></ol><p>Once configured, every prompt will produce a real, rich, self-contained interactive HTML artifact exactly as specified in the HTML_CONTRACT.</p><button onclick="parent.postMessage({type:'harness-request', action:'open-settings'}, '*')">Open Settings</button></div></body></html>`;
+}
 
 async function generateMockHtmlResponse(prompt) {
   // Production: Try real AI first (Grok via your existing CLI login, or configured OpenAI-compatible)

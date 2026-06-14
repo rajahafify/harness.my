@@ -146,6 +146,33 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 21:30) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 21:30</div>
+                <h2 class="entry-title">Removed all mock responses; real Grok login is now the only path</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    The agent (via IPC in main.js) now **never** returns a mock or local simulation for normal user prompts. 
+                </p>
+                <ul>
+                    <li>Primary: Auto-detects your Grok CLI login (`~/.grok/auth.json`) and calls the official Grok CLI chat proxy with the full HTML_CONTRACT as system prompt. The model is instructed to output pure self-contained HTML.</li>
+                    <li>Alternative: Configure any OpenAI-compatible provider (including direct xAI API key) in the Settings gear (⚙).</li>
+                    <li>If no real Grok login or API key is available/configured, the "agent" returns a clean, styled "Setup Required" HTML card with exact instructions ("run grok login" or open Settings) — no fake/mock content is ever shown as an "agent response".</li>
+                    <li>The previous rich local simulation is kept only as an internal fallback in error paths and is no longer part of the user-facing agent flow.</li>
+                </ul>
+                <p>
+                    This makes the app truly agentic with real AI (your Grok) while remaining usable as a standalone production exe. The UI (chat + artifacts + expandable viewer) remains the clean professional desktop layout.
+                </p>
+                <div class="meta">
+                    Rebuilt dist/harness-0.1.1.exe (and alias). See Settings in the app to connect real Grok.
+                </div>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 21:15) -->
         <article class="entry">
             <div class="entry-header">
