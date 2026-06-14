@@ -1,6 +1,8 @@
 {
   "name": "harness",
   "version": "0.1.0",
+  "description": "Agentic harness using HTML as first-class UI. Conversation-based like Codex/Claude Code, where agents respond with rich, interactive HTML cards by default.",
+  "author": "Raja Hafify",
   "main": "main.js",
   "private": true,
   "scripts": {
@@ -22,16 +24,31 @@
       "main.js",
       "preload.js"
     ],
-
+    "extraFiles": [
+      {
+        "from": "node_modules/electron/dist/locales",
+        "to": "locales",
+        "filter": ["**/*"]
+      }
+    ],
     "win": {
-      "target": "nsis",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        "portable"
+      ],
       "icon": "icon.ico"
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
     },
-    "asar": true
+    "asar": true,
+    "compression": "maximum"
   },
   "devDependencies": {
     "electron": "^31.0.0",

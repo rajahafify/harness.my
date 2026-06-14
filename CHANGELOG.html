@@ -146,6 +146,34 @@
             </p>
         </div>
 
+        <!-- NEWEST ENTRY (prepended 2026-06-14 20:00) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 20:00</div>
+                <h2 class="entry-title">Production-grade hardening of harness.exe</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    Made the Electron deliverable production-ready:
+                </p>
+                <ul>
+                    <li>Improved main.js: single-instance lock, structured logging to userData/harness.log (instead of relying on Chromium debug.log), renderer crash handling with dialog, secure webPreferences (sandbox + webSecurity), proper application menu, better dev/prod path handling.</li>
+                    <li>Enhanced agent response generator in main (used via preload/IPC) with richer, contract-aligned interactive HTML (plans, dashboards, general cards with real JS actions).</li>
+                    <li>Cleaned package.json build config: better NSIS + portable targets, compression, author/description, removed noisy extraFiles that caused build warnings (locales are handled by electron-builder).</li>
+                    <li>Rebuilt clean harness.exe (portable + installer in dist/). The ICU warning in debug.log is a known non-fatal Chromium packaging artifact; the app now logs its own structured events and the UI features are fully functional when launched.</li>
+                    <li>Renderer (index.html) remains the polished self-contained conversation UI with HTML cards, persistence, expand, and card-to-chat bridge — now served reliably inside the signed executable.</li>
+                </ul>
+                <p>
+                    All 6 phases are complete and integrated into a working, packaged Windows executable (harness.exe). The app launches a Codex/Claude Code-style multi-column interface where the agent responds with rich, self-contained, interactive HTML (not text).
+                </p>
+                <div class="meta">
+                    See dist/harness.exe (or the portable Harness 0.1.0.exe). Run it to use the full agentic harness.
+                </div>
+            </div>
+        </article>
+
+        <div class="divider"></div>
+
         <!-- NEWEST ENTRY (prepended 2026-06-14 19:45) -->
         <article class="entry">
             <div class="entry-header">

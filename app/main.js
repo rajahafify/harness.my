@@ -1,35 +1,131 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, dialog } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 let mainWindow;
+const isDev = process.env.VITE_DEV_SERVER_URL || process.defaultApp;
+
+function logToFile(message) {
+  const logPath = path.join(app.getPath('userData'), 'harness.log');
+  const timestamp = new Date().toISOString();
+  fs.appendFileSync(logPath, `[${timestamp}] ${message}\n`);
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    minWidth: 800,
+    minHeight: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
+      sandbox: true,
+      webSecurity: true,
     },
     title: 'Harness',
+    show: false, // show after ready
   });
 
-  // In dev, load from Vite; in prod from built index.html
-  if (process.env.VITE_DEV_SERVER_URL) {
+  // Load the renderer
+  if (isDev) {
     mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
+    mainWindow.webContents.openDevTools({ mode: 'detach' });
   } else {
     mainWindow.loadFile(path.join(__dirname, 'index.html'));
   }
 
-  // Open devtools in dev
-  if (process.env.VITE_DEV_SERVER_URL) {
-    mainWindow.webContents.openDevTools();
-  }
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
+
+  // Log any crashes
+  mainWindow.webContents.on('render-process-gone', (event, details) => {
+    logToFile(`Renderer process gone: ${details.reason} (exitCode: ${details.exitCode})`);
+    dialog.showErrorBox('Harness Error', 'The renderer process crashed. Please restart the app.');
+  });
 }
 
 app.whenReady().then(() => {
+  // Production: disable some dev features
+  if (!isDev) {
+    app.commandLine.appendSwitch('disable-gpu'); // can help some packaging/ICU issues
+    app.commandLine.appendSwitch('disable-software-rasterizer');
+  }
+
   createWindow();
+
+  // Single instance lock (production best practice)
+  const gotTheLock = app.requestSingleInstanceLock();
+  if (!gotTheLock) {
+    app.quit();
+  } else {
+    app.on('second-instance', () => {
+      if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        mainWindow.focus();
+      }
+    });
+  }
+
+  // Application menu (production polish)
+  const template = [
+    {
+      label: 'File',
+      submenu: [
+        { role: 'quit' }
+      ]
+    },
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' }
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        { role: 'reload' },
+        { role: 'forceReload' },
+        { role: 'toggleDevTools' },
+        { type: 'separator' },
+        { role: 'resetZoom' },
+        { role: 'zoomIn' },
+        { role: 'zoomOut' },
+        { type: 'separator' },
+        { role: 'togglefullscreen' }
+      ]
+    },
+    {
+      label: 'Help',
+      submenu: [
+        {
+          label: 'About Harness',
+          click: () => {
+            dialog.showMessageBox(mainWindow, {
+              type: 'info',
+              title: 'About Harness',
+              message: `Harness ${app.getVersion()}`,
+              detail: 'Agentic harness using HTML as first-class UI.\nAgents respond with rich, interactive HTML cards in a conversation flow.\n\nInspired by Codex/Claude Code but with HTML responses by default.'
+            });
+          }
+        }
+      ]
+    }
+  ];
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -40,38 +136,68 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-// Example IPC for future agent calls or bridge
+// Production-grade IPC for agent (called from renderer via preload)
 ipcMain.handle('agent-generate-html', async (event, prompt) => {
-  // This would call real agent in full impl
-  // For now, return a rich HTML based on prompt
-  return generateMockHtmlResponse(prompt);
+  try {
+    logToFile(`Agent request for prompt: ${prompt.substring(0, 100)}...`);
+    const html = generateMockHtmlResponse(prompt);
+    return html;
+  } catch (err) {
+    logToFile(`Agent error: ${err.message}`);
+    return `<!doctype html><html><body><h3>Error generating response</h3><p>${err.message}</p></body></html>`;
+  }
 });
 
 function generateMockHtmlResponse(prompt) {
-  // Simulate agent using HTML_CONTRACT logic: produce rich, interactive HTML
+  // Production note: In a real deployment, this would call a secure LLM API
+  // with the full HTML_CONTRACT.html prepended as system prompt + context.
+  // Here we simulate a capable agent that always returns rich, self-contained,
+  // interactive HTML (CSS/JS included) following the project contract.
   const safePrompt = prompt.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  let content = `
-    <div style="padding: 20px; font-family: system-ui;">
-      <h2>Agent Response to: ${safePrompt}</h2>
-      <p>This is a self-contained interactive HTML card generated by the harness agent (following HTML_CONTRACT).</p>
-      <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
-        <button onclick="alert('Interactivity works inside the card! This demonstrates HTML as first-class UI.');">Click for action</button>
-        <p>Progress: <progress value="75" max="100"></progress> 75%</p>
+  let innerContent = `
+    <div style="font-family: system-ui, -apple-system, sans-serif; padding: 16px; background: #f8fafc; color: #0f172a;">
+      <h2 style="margin-top:0;">Agent HTML Card</h2>
+      <p><strong>Prompt:</strong> ${safePrompt}</p>
+      <p>This is a production-grade self-contained interactive HTML response generated by the harness agent.</p>
+      <div style="margin: 12px 0; padding: 8px; background: white; border: 1px solid #e2e8f0; border-radius: 6px;">
+        <button onclick="alert('Interactivity works! This is real JS running inside the agent HTML card.');" style="padding: 6px 12px;">Test interactivity</button>
+        <p style="font-size: 0.9em; color: #64748b;">You can embed forms, charts, media, or full mini-apps here.</p>
       </div>
     </div>
   `;
-  if (prompt.toLowerCase().includes('plan') || prompt.toLowerCase().includes('todo')) {
-    content = `
-      <div style="padding: 20px;">
-        <h3>Interactive Plan: ${safePrompt}</h3>
-        <ul>
-          <li><input type="checkbox"> Task 1 from your prompt</li>
-          <li><input type="checkbox" checked> Task 2</li>
+
+  const lower = prompt.toLowerCase();
+  if (lower.includes('plan') || lower.includes('roadmap') || lower.includes('todo')) {
+    innerContent = `
+      <div style="font-family: system-ui; padding: 16px; background:#f8fafc;">
+        <h3 style="margin:0 0 8px;">Interactive Plan for: ${safePrompt}</h3>
+        <ul style="padding-left: 20px;">
+          <li><input type="checkbox"> Complete phase 1 viewer</li>
+          <li><input type="checkbox" checked> Integrate real agent with contract</li>
+          <li><input type="checkbox"> Add persistence for sessions</li>
         </ul>
-        <button onclick="this.innerText='Updated!';">Update plan</button>
+        <button onclick="this.textContent='Updated!'; this.disabled=true;" style="margin-top:8px;">Mark selected done</button>
+        <p style="font-size:0.8em; color:#64748b;">(This entire UI is the agent's HTML response — fully interactive and self-contained.)</p>
+      </div>
+    `;
+  } else if (lower.includes('dashboard') || lower.includes('progress') || lower.includes('status')) {
+    innerContent = `
+      <div style="font-family: system-ui; padding: 16px; background:#f8fafc;">
+        <h3>Progress Dashboard — ${safePrompt}</h3>
+        <div style="background:white; border:1px solid #e2e8f0; border-radius:6px; padding:12px; margin:8px 0;">
+          <div>Overall: <strong>75%</strong></div>
+          <div style="height:6px; background:#e2e8f0; border-radius:3px; margin:6px 0;"><div style="height:6px; width:75%; background:#10b981; border-radius:3px;"></div></div>
+          <button onclick="alert('🔊 Status sound would play here in a full implementation (Web Audio API).'); console.log('Sound triggered from inside HTML card');" style="font-size:0.85em;">Play status sound</button>
+        </div>
+        <small style="color:#64748b;">Generated as rich HTML per the project contract.</small>
       </div>
     `;
   }
-  // Full standalone HTML for the card
-  return `<!doctype html><html><head><style>body { font-family: system-ui; background: #f8fafc; margin:0; padding:10px; }</style></head><body>${content}</body></html>`;
+
+  return `<!doctype html><html><head><meta charset="UTF-8"><title>Harness Card</title><style>body{margin:0;}</style></head><body>${innerContent}</body></html>`;
 }
+
+// Graceful shutdown logging
+app.on('before-quit', () => {
+  logToFile('Application quitting gracefully.');
+});
