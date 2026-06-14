@@ -5,5 +5,9 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true
+  },
+  build: {
+    // Do not empty dist on Windows — prevents EPERM when previous large harness-*.exe files are locked by the OS/Defender
+    emptyOutDir: false
   }
 })

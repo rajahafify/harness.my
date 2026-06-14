@@ -400,6 +400,13 @@
             const val = promptInput.value.trim();
             if (!val) return;
 
+            // Auto-require: block prompts until real Grok is connected
+            const conn = await getConnectionStatus();
+            if (!conn.hasCredentials) {
+                showGrokRequired();
+                return;
+            }
+
             currentSession.messages.push({
                 type: 'user',
                 content: val,
@@ -525,7 +532,7 @@
         });
 
         // Boot - Production onboarding with intentional examples (not fake "test" chats)
-        loadSession();
+        loadSessions();
 
         // On first run with no real work yet, seed one high-quality example artifact.
         // This demonstrates the core value (rich, self-contained interactive HTML as the agent's response)
@@ -590,6 +597,8 @@
                     statusEl.className = 'px-2 py-0.5 rounded bg-gray-100 text-gray-600 text-[10px]';
                 }
             }
+            // Participate in auto-require UI (in case status changes outside the normal path)
+            refreshGrokConnectionUI();
         }
 
         function openSettings() {
@@ -678,21 +687,177 @@
 
             modal.remove();
             await loadAgentStatus();
+            await refreshGrokConnectionUI();
             alert('Settings saved. Next prompts will try to use real AI if configured.');
         }
 
-        // Boot - Production onboarding with intentional examples
-        loadSessions();
-        loadAgentStatus();
+        // --- Auto-require Grok at startup (new in 0.1.3) ---
+        let grokRequiredVisible = false;
 
-        // ... (the rest of the boot code with the example seeding remains)
+        function hasRealGrok(s) {
+            if (!s) return false;
+            return s.provider === 'grok-cli' || !!(s.apiKey && s.provider);
+        }
+
+        async function getConnectionStatus() {
+            try {
+                if (window.harnessAPI && window.harnessAPI.checkGrokCredentials) {
+                    return await window.harnessAPI.checkGrokCredentials();
+                }
+            } catch (e) {}
+            // Fallback using last loaded settings (CLI auto-detect happens in main loadSettings)
+            return {
+                hasCredentials: hasRealGrok(currentSettings),
+                provider: currentSettings.provider,
+                cliTokenPresent: false,
+                keyPresent: !!currentSettings.apiKey
+            };
+        }
+
+        async function refreshGrokConnectionUI() {
+            const status = await getConnectionStatus();
+            const connected = !!status.hasCredentials;
+            const statusEl = document.getElementById('agent-status');
+            if (statusEl) {
+                if (connected) {
+                    const label = (currentSettings.provider === 'grok-cli' || status.cliTokenPresent) ? 'Grok (your CLI login)' : (currentSettings.provider || 'Grok');
+                    statusEl.textContent = label;
+                    statusEl.className = 'px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 text-[10px]';
+                } else {
+                    statusEl.textContent = 'Grok required';
+                    statusEl.className = 'px-2 py-0.5 rounded bg-amber-100 text-amber-700 text-[10px]';
+                }
+            }
+            if (!connected && !grokRequiredVisible) {
+                showGrokRequired();
+            } else if (connected && grokRequiredVisible) {
+                // User just connected — restore normal chat UI
+                grokRequiredVisible = false;
+                chatThread.innerHTML = '';
+                renderThread();
+                if (currentSession.artifacts.length > 0) {
+                    showArtifact(currentSession.artifacts.length - 1);
+                }
+            }
+        }
+
+        function showGrokRequired() {
+            grokRequiredVisible = true;
+            chatThread.innerHTML = `
+                <div class="flex h-full items-center justify-center p-6" style="background:var(--bg)">
+                    <div class="w-full max-w-md">
+                        <div class="bg-white border border-[#e2e8f0] rounded-2xl p-6 shadow-sm">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div style="width:42px;height:42px;border-radius:999px;background:#ecfdf5;display:flex;align-items:center;justify-content:center;font-size:22px">🔑</div>
+                                <div>
+                                    <div class="font-semibold text-lg tracking-tight">Grok connection required</div>
+                                    <div class="text-[11px] text-[#64748b]">Harness starts with real Grok — no mocks, no simulation.</div>
+                                </div>
+                            </div>
+
+                            <div class="text-sm leading-relaxed text-[#334155] mb-4">
+                                Every prompt is sent to Grok. The agent replies with a complete, self-contained, beautiful interactive HTML artifact (exactly as defined in the HTML_CONTRACT).
+                            </div>
+
+                            <div class="rounded-xl bg-[#f8fafc] border border-[#e2e8f0] p-3 mb-4 text-xs">
+                                <div class="font-medium mb-1 text-[#0f172a]">Fastest path (recommended)</div>
+                                <div class="font-mono text-emerald-800">grok login</div>
+                                <div class="mt-2 text-[10px] text-[#64748b]">Run this in your terminal, then click “Recheck now”. Works with your existing CLI login.</div>
+                            </div>
+
+                            <div class="flex flex-wrap gap-2">
+                                <button id="grok-recheck-btn"
+                                        class="px-4 py-1.5 rounded-full text-sm font-medium bg-white border border-[#e2e8f0] hover:bg-[#f8fafc]">Recheck now</button>
+                                <button id="grok-settings-btn"
+                                        class="px-4 py-1.5 rounded-full text-sm font-medium bg-emerald-700 text-white">Open Settings</button>
+                            </div>
+
+                            <div class="mt-4 text-[10px] text-[#64748b]">
+                                Or paste an xAI / OpenAI-compatible key in Settings. Changes take effect immediately — no app restart required.
+                            </div>
+                        </div>
+                        <div class="text-center mt-3 text-[10px] text-[#94a3b8]">The chat composer and agent are disabled until Grok is connected.</div>
+                    </div>
+                </div>
+            `;
+
+            // Wire buttons (they are inside the injected HTML)
+            const recheckBtn = chatThread.querySelector('#grok-recheck-btn');
+            const settingsBtn = chatThread.querySelector('#grok-settings-btn');
+            if (recheckBtn) recheckBtn.onclick = () => recheckGrokConnection();
+            if (settingsBtn) settingsBtn.onclick = () => openSettings();
+        }
+
+        async function recheckGrokConnection() {
+            const btns = chatThread.querySelectorAll('button');
+            btns.forEach(b => { b.disabled = true; b.textContent = 'Checking...'; });
+
+            try {
+                if (window.harnessAPI && window.harnessAPI.getSettings) {
+                    currentSettings = await window.harnessAPI.getSettings();
+                }
+                const status = await getConnectionStatus();
+                if (status.hasCredentials) {
+                    grokRequiredVisible = false;
+                    chatThread.innerHTML = '';
+                    renderThread();
+                    if (currentSession.artifacts.length > 0) {
+                        showArtifact(currentSession.artifacts.length - 1);
+                    } else if (!localStorage.getItem('harness-has-seen-examples')) {
+                        // Run the first-run example seed now that we are connected
+                        // (the original seeding block already ran earlier; this is a safety net for post-connect)
+                    }
+                    await refreshGrokConnectionUI();
+                } else {
+                    // Still no credentials — keep the panel but re-enable buttons
+                    btns.forEach(b => { b.disabled = false; if (b.id === 'grok-recheck-btn') b.textContent = 'Recheck now'; });
+                    // brief flash hint
+                    const hint = document.createElement('div');
+                    hint.style.cssText = 'margin-top:8px;font-size:10px;color:#b45309';
+                    hint.textContent = 'Still no Grok credentials detected. Run `grok login` in your terminal or add a key in Settings.';
+                    chatThread.querySelector('.max-w-md').appendChild(hint);
+                    setTimeout(() => hint.remove(), 4200);
+                }
+            } catch (e) {
+                btns.forEach(b => { b.disabled = false; if (b.id === 'grok-recheck-btn') b.textContent = 'Recheck now'; });
+            }
+        }
+
+        async function ensureGrokOnStartup() {
+            await loadAgentStatus();
+            const status = await getConnectionStatus();
+            if (!status.hasCredentials) {
+                showGrokRequired();
+                // Auto-require experience: pop Settings shortly after the require panel appears
+                setTimeout(() => {
+                    const existingModal = document.querySelector('.fixed.inset-0');
+                    if (!existingModal) {
+                        openSettings();
+                    }
+                }, 850);
+            } else {
+                // Normal path — the example seeding (if any) was already executed earlier in the script
+                if (currentSession.artifacts.length === 0) {
+                    setTimeout(() => {
+                        if (promptInput) promptInput.placeholder = 'Try: "Build a production-grade session manager UI"';
+                    }, 700);
+                }
+            }
+        }
+
+        // Boot - Auto-require Grok connection at startup (0.1.3)
+        // We call the smart ensure function which:
+        // - Loads latest settings + probes CLI token live
+        // - If no real Grok credentials: shows prominent require panel + auto-opens Settings
+        // - If credentials present: renders normal thread (example seed from earlier in script will be visible)
+        ensureGrokOnStartup();
 
         // Expose for bridge if needed
         window.harness = {
             requestFollowUp: (p) => { promptInput.value = p; sendPrompt(); }
         };
 
-        console.log('%c[Harness] Production app ready. Real AI supported via Settings (Grok CLI auto or API key).', 'color:#059669');
+        console.log('%c[Harness] Production app ready. Grok is auto-required at start. Real AI (CLI or key) only.', 'color:#059669');
     </script>
 </body>
 </html>

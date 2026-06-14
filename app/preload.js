@@ -7,4 +7,7 @@ contextBridge.exposeInMainWorld('harnessAPI', {
   // Settings for real AI provider (OpenAI-compatible or Grok CLI auto)
   getSettings: () => ipcRenderer.invoke('get-settings'),
   saveSettings: (settings) => ipcRenderer.invoke('save-settings', settings),
+
+  // Probe for auto-require at startup (checks CLI token on disk + saved key)
+  checkGrokCredentials: () => ipcRenderer.invoke('check-grok-credentials'),
 });

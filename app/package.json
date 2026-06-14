@@ -1,6 +1,6 @@
 {
   "name": "harness",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Agentic harness using HTML as first-class UI. Conversation-based like Codex/Claude Code, where agents respond with rich, interactive HTML cards by default.",
   "author": "Raja Hafify",
   "main": "main.js",

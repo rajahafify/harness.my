@@ -406,6 +406,21 @@ ipcMain.handle('save-settings', (event, settings) => {
   return true;
 });
 
+// New for "auto require Grok during start": renderer can probe without sending a prompt
+ipcMain.handle('check-grok-credentials', () => {
+  const settings = loadSettings();
+  const cliToken = getGrokCliToken();
+  const hasCli = !!cliToken;
+  const hasKey = !!(settings && settings.apiKey);
+  const provider = settings && settings.provider ? settings.provider : (hasCli ? 'grok-cli' : null);
+  return {
+    hasCredentials: hasCli || hasKey,
+    provider,
+    cliTokenPresent: hasCli,
+    keyPresent: hasKey
+  };
+});
+
 // Real agent call (production)
 async function callRealAgent(prompt, settings) {
   const systemPrompt = getHtmlContractSystemPrompt();

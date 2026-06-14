@@ -146,7 +146,34 @@
             </p>
         </div>
 
-        <!-- NEWEST ENTRY (prepended 2026-06-14 22:05) -->
+        <!-- NEWEST ENTRY (prepended 2026-06-14 22:45) -->
+        <article class="entry">
+            <div class="entry-header">
+                <div class="entry-date">2026-06-14 22:45</div>
+                <h2 class="entry-title">Auto-require real Grok at startup (v0.1.3). No more “start the app then discover you have no AI”.</h2>
+            </div>
+            <div class="entry-body">
+                <p>
+                    “Make the app auto require grok during start.” — the app now <strong>enforces</strong> a real Grok connection before the normal chat experience is available.
+                </p>
+                <ul>
+                    <li><strong>New probe IPC:</strong> <code>check-grok-credentials</code> (main) + exposed via preload. It combines live <code>getGrokCliToken()</code> (the robust ~/.grok/auth.json scanner) with saved settings.apiKey. Renderer can ask “do we have real Grok right now?” without sending a prompt.</li>
+                    <li><strong>At launch (ensureGrokOnStartup + boot):</strong> After loading sessions, the app checks credentials. If none → the main chat thread area is immediately replaced by a clean, self-contained “Grok connection required” panel. The panel explains why (real HTML artifacts only), shows the exact <code>grok login</code> command with copy support, and offers two primary actions: “Recheck now” and “Open Settings”.</li>
+                    <li><strong>Auto-require UX:</strong> The Settings modal is automatically opened ~850ms after the require panel appears. The status pill turns amber “Grok required” (emerald only when a working CLI token or key is present).</li>
+                    <li><strong>Hard guard:</strong> <code>sendPrompt()</code> now calls the credentials check first. If not connected it shows the require panel instead of queuing a prompt that would just hit the backend setup card.</li>
+                    <li><strong>Live recheck (no restart):</strong> User opens a terminal, runs <code>grok login</code>, comes back, clicks “Recheck now”. The app re-calls getSettings (which auto-defaults to grok-cli) + the probe. On success the require panel is torn down, <code>renderThread()</code> + <code>showArtifact</code> run, and any first-run example artifact becomes visible. Changes are hot.</li>
+                    <li><strong>Post-save flow:</strong> Saving a key or choosing grok-cli in Settings immediately triggers <code>refreshGrokConnectionUI()</code> so the app can “unlock” without a full reload.</li>
+                </ul>
+                <p>
+                    The rest of the production contract is untouched: multi-column Codex-like layout, composer lives in the main column, artifact pane starts at 320 px (expandable), only real Grok (or the honest setup card) ever comes out of the agent IPC, example seed is still a single high-quality intentional starter, all previous no-mock work preserved.
+                </p>
+                <div class="meta">
+                    Version 0.1.3. Rebuilt dist/harness-0.1.3.exe + harness.exe alias. This is the “you open the app → you are looking at Grok auth” experience the user asked for.
+                </div>
+            </div>
+        </article>
+
+        <!-- PREVIOUS (2026-06-14 22:05) -->
         <article class="entry">
             <div class="entry-header">
                 <div class="entry-date">2026-06-14 22:05</div>
